@@ -10,4 +10,5 @@ For developers, you may make use of the SadPencil.Ra2CsfFile library.
 
 ## Notes
 Reference: https://modenc.renegadeprojects.com/CSF_File_Format
+
 License: MIT
