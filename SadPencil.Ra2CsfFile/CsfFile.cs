@@ -257,13 +257,25 @@ namespace SadPencil.Ra2CsfFile
                 List<string> values = new List<string>();
                 for (int iValue = 1; ; iValue++)
                 {
-                    string keyName = GetIniLabelValueKeyName(iValue);
-                    var value = labelSection.Keys.FirstOrDefault(key => key.Name == keyName);
-                    if (value == null)
+                    List<string> valueSplited = new List<string>();
+                    for (int iLine = 1; ; iLine++)
+                    {
+                        string keyName = GetIniLabelValueKeyName(iValue, iLine);
+                        var value = labelSection.Keys.FirstOrDefault(key => key.Name == keyName);
+
+                        if (value == null)
+                        {
+                            break;
+                        }
+
+                        valueSplited.Add(value.Value);
+                    }
+
+                    if (valueSplited.Count == 0)
                     {
                         break;
                     }
-                    values.Add(value.Value);
+                    values.Add(string.Join("\n", valueSplited));
                 }
 
                 csf.Labels.Add(labelName, values);
@@ -272,7 +284,7 @@ namespace SadPencil.Ra2CsfFile
             return csf;
         }
 
-        private static string GetIniLabelValueKeyName(int index) => (index == 1) ? "Value" : $"Value{index}";
+        private static string GetIniLabelValueKeyName(int valueIndex, int lineIndex) => ((valueIndex == 1) ? "Value" : $"Value{valueIndex}") + ((lineIndex == 1) ? String.Empty : $"Line{lineIndex}");
 
         /// <summary>
         /// Write an ini file that represent the stringtable.
@@ -300,8 +312,14 @@ namespace SadPencil.Ra2CsfFile
 
                 for (int iValue = 1; iValue <= labelValues.Count; iValue++)
                 {
-                    string keyName = GetIniLabelValueKeyName(iValue);
-                    _ = labelSection.Keys.Add(keyName, labelValues[iValue - 1]);
+                    var value = labelValues[iValue - 1];
+                    var valueSplited = value.Split('\n');
+                    for (int iLine = 1; iLine <= valueSplited.Length; iLine++)
+                    {
+                        string keyName = GetIniLabelValueKeyName(iValue, iLine);
+                        string keyValue = valueSplited[iLine - 1];
+                        _ = labelSection.Keys.Add(keyName, keyValue);
+                    }
                 }
             }
 
@@ -310,6 +328,7 @@ namespace SadPencil.Ra2CsfFile
                 ini.Save(sw);
             }
         }
+
 
         public static CsfLang GetCsfLang(Int32 value)
         {
