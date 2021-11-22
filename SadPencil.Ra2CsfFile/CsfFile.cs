@@ -175,6 +175,11 @@ namespace SadPencil.Ra2CsfFile
                     var labelName = labelNameValues.Key;
                     var labelValues = labelNameValues.Value;
 
+                    if (!ValidateLabelName(labelName))
+                    {
+                        throw new Exception($"Invalid characters found in label name \"{labelName}\".");
+                    }
+
                     bw.Write(Encoding.ASCII.GetBytes(" LBL"));
                     bw.Write(labelValues.Count);
                     var labelNameBytes = Encoding.ASCII.GetBytes(labelName);
@@ -248,10 +253,9 @@ namespace SadPencil.Ra2CsfFile
             foreach (var labelSection in labelSections)
             {
                 string labelName = labelSection.Name;
-                bool isValid = ValidateLabelName(labelName);
-                if (!isValid)
+                if (!ValidateLabelName(labelName))
                 {
-                    continue;
+                    throw new Exception($"Invalid characters found in label name \"{labelName}\".");
                 }
 
                 List<string> values = new List<string>();
@@ -308,6 +312,11 @@ namespace SadPencil.Ra2CsfFile
                 var labelName = labelNameValues.Key;
                 var labelValues = labelNameValues.Value;
 
+                if (!ValidateLabelName(labelName))
+                {
+                    throw new Exception($"Invalid characters found in label name \"{labelName}\".");
+                }
+
                 var labelSection = ini.Sections.Add(labelName);
 
                 for (int iValue = 1; iValue <= labelValues.Count; iValue++)
@@ -345,11 +354,8 @@ namespace SadPencil.Ra2CsfFile
         public static bool ValidateLabelName(string labelName)
         {
             // is an ASCII string
-
             // do not contains spaces, tabs and line breaks
-
-            // TODO
-            return true;
+            return labelName.ToCharArray().Where(c => (c <= 32 || c >= 127)).Count() == 0;
         }
     }
 }
