@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>SadPencil.Ra2CsfFile</id>
+    <version>1.1.0</version>
+    <title>SadPencil.Ra2CsfFile</title>
+    <authors>sadpencil</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/SadPencil/Ra2CsfFile</projectUrl>
+    <!-- <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl> -->
+    <description>Load and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.</description>
+    <releaseNotes>
+      v1.1.0: fix a bug where multi-line text will be trimmed mistakenly; invalid chars in label name will now be checked.
+    </releaseNotes>
+    <copyright>Copyright © Sad Pencil 2021</copyright>
+    <tags>CSF Westwood Red-Alert-2 RA2</tags>
+    <dependencies>
+      <group targetFramework="net40">
+        <dependency id="MadMilkman.Ini" version="1.0.6.0" />
+      </group>
+    </dependencies>
+
+  </metadata>
+</package>
