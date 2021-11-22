@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("SadPencil.Ra2CsfFile")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Load and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Sad Pencil")]
 [assembly: AssemblyProduct("SadPencil.Ra2CsfFile")]
 [assembly: AssemblyCopyright("Copyright © Sad Pencil 2021")]
 [assembly: AssemblyTrademark("")]
