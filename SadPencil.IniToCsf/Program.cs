@@ -28,7 +28,7 @@ namespace SadPencil.IniToCsf
                 Ra2CsfFile.CsfFile csf;
                 using (var stream = new FileStream(filename, FileMode.Open))
                 {
-                    csf = Ra2CsfFile.CsfFile.LoadFromIniFile(stream);
+                    csf = Ra2CsfFile.CsfFileIniHelper.LoadFromIniFile(stream);
                 }
                 using (var stream = new FileStream(outFileName, FileMode.Create))
                 {

@@ -32,7 +32,7 @@ namespace SadPencil.CsfToIni
                 }
                 using (var stream = new FileStream(outFileName, FileMode.Create))
                 {
-                    csf.WriteIniFile(stream);
+                    Ra2CsfFile.CsfFileIniHelper.WriteIniFile(csf, stream);
                 }
             }
             catch (Exception ex)
