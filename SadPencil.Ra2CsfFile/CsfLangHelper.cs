@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SadPencil.Ra2CsfFile
 {
+    /// <summary>
+    /// A helper class for CsfLang enum.
+    /// </summary>
     public static class CsfLangHelper
     {
         /// <summary>

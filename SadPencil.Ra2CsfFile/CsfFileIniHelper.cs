@@ -8,6 +8,9 @@ using MadMilkman.Ini;
 
 namespace SadPencil.Ra2CsfFile
 {
+    /// <summary>
+    /// A helper class for CsfFile class. It focus on loading/writing .ini files that represents the string table, which can be regarded as a replacement of .csf files.
+    /// </summary>
     public static class CsfFileIniHelper
     {
         private const string INI_TYPE_NAME = "SadPencil.Ra2CsfFile.Ini";
