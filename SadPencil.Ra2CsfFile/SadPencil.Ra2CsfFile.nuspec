@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>SadPencil.Ra2CsfFile</id>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <title>SadPencil.Ra2CsfFile</title>
     <authors>sadpencil</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -11,6 +11,7 @@
     <!-- <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl> -->
     <description>Load and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.</description>
     <releaseNotes>
+v1.2.0: api breaking change: CsfFile.Labels will now store only one value for a label, as the rest values (if any) are not used by the game; api change: deprecate CsfFile.GetCsfLang() with CsfLangHelper.GetCsfLang(); api change: deprecate CsfFile.LoadFromIniFile() with CsfFileIniHelper.LoadFromIniFile(); api change: deprecate CsfFile.WriteIniFile() with CsfFileIniHelper.WriteIniFile().
 v1.1.1: add XML documentation; re-release the library with Release configuration.
 v1.1.0: fix a bug where multi-line text will be trimmed mistakenly; invalid chars in label name will now be checked.
     </releaseNotes>
