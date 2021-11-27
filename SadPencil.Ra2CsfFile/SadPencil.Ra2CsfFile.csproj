@@ -45,11 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsfFile.cs" />
+    <Compile Include="CsfFileIniHelper.cs" />
     <Compile Include="CsfLang.cs" />
+    <Compile Include="CsfLangHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CsfFile.Ini.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

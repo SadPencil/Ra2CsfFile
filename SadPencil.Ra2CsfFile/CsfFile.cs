@@ -9,16 +9,15 @@ namespace SadPencil.Ra2CsfFile
 {
     /// <summary>
     /// This class reads and writes the stringtable file (.csf) that is used by RA2/YR. <br/>
-    /// Note: the 'Extra Value' of a label is currently ignored. It has no effect on gaming.
     /// </summary>
-    public partial class CsfFile
+    public class CsfFile
     {
         // https://modenc.renegadeprojects.com/CSF_File_Format
 
         /// <summary>
-        /// The labels of this file. Each label has a name, and a list of strings, which are the dictionary keys and values.        
+        /// The labels of this file. Each label has a name, and a string, which are the dictionary keys and values.        
         /// </summary>
-        public IDictionary<string, List<string>> Labels { get; } = new Dictionary<string, List<string>>();
+        public IDictionary<string, string> Labels { get; } = new Dictionary<string, string>();
         /// <summary>
         /// The language of this file.
         /// </summary>
@@ -37,7 +36,10 @@ namespace SadPencil.Ra2CsfFile
         public CsfFile() { }
 
         /// <summary>
-        /// Load an existing stringtable file (.csf).
+        /// Load an existing stringtable file (.csf).<br/>
+        /// <br/>
+        /// Note: for those labels that has more than one values, only the first value is reserved. It has no effect on gaming. <br/>
+        /// Note: the 'Extra Value' of a label is ignored. It has no effect on gaming.
         /// </summary>
         /// <param name="stream">The file stream of a stringtable file (.csf).</param>
         public static CsfFile LoadFromCsfFile(Stream stream)
@@ -57,7 +59,7 @@ namespace SadPencil.Ra2CsfFile
                 var labelsNum = br.ReadInt32();
                 var stringsNum = br.ReadInt32();
                 _ = br.ReadInt32(); // unused
-                csf.Language = GetCsfLang(br.ReadInt32());
+                csf.Language = CsfLangHelper.GetCsfLang(br.ReadInt32());
 
                 // read labels
                 for (int iLabel = 0; iLabel < labelsNum; iLabel++)
@@ -96,7 +98,8 @@ namespace SadPencil.Ra2CsfFile
 
 
                     // read values
-                    List<string> values = new List<string>();
+                    // only the first value is preserved; others are useless
+                    string labelValue = null;
                     for (int iValue = 0; iValue < numValues; iValue++)
                     {
                         var labelValueType = br.ReadBytes(4);
@@ -134,11 +137,18 @@ namespace SadPencil.Ra2CsfFile
                             _ = br.ReadBytes(extLength);
                         }
 
-                        values.Add(valueStr);
+                        if (iValue == 0)
+                        {
+                            labelValue = valueStr;
+                        }
                     }
 
-                    // append
-                    csf.Labels.Add(labelNameStr, values);
+                    // omit 0 values, so the behavior is consistent with .ini
+                    if (labelValue != null)
+                    {
+                        // append
+                        csf.Labels.Add(labelNameStr, labelValue);
+                    }
                 }
             }
             return csf;
@@ -157,7 +167,7 @@ namespace SadPencil.Ra2CsfFile
                 bw.Write(this.Version); // version
                 int numLabels = this.Labels.Keys.Count;
                 bw.Write(numLabels);
-                int numValues = this.Labels.Values.Select(list => list.Count).Sum();
+                int numValues = this.Labels.Values.Count;
                 bw.Write(numValues);
                 bw.Write((Int32)0); // unused
                 bw.Write((Int32)this.Language);
@@ -165,7 +175,7 @@ namespace SadPencil.Ra2CsfFile
                 foreach (var labelNameValues in this.Labels)
                 {
                     var labelName = labelNameValues.Key;
-                    var labelValues = labelNameValues.Value;
+                    var labelValue = labelNameValues.Value;
 
                     if (!ValidateLabelName(labelName))
                     {
@@ -173,24 +183,21 @@ namespace SadPencil.Ra2CsfFile
                     }
 
                     bw.Write(Encoding.ASCII.GetBytes(" LBL"));
-                    bw.Write(labelValues.Count);
+                    bw.Write((Int32)1);
                     var labelNameBytes = Encoding.ASCII.GetBytes(labelName);
                     bw.Write(labelNameBytes.Length);
                     bw.Write(labelNameBytes);
 
-                    // write values
-                    foreach (var valueStr in labelValues)
+                    // write values 
+                    bw.Write(Encoding.ASCII.GetBytes(" RTS"));
+                    var valueBytes = Encoding.Unicode.GetBytes(labelValue);
+                    valueBytes = valueBytes.Select(v => (byte)(~v)).ToArray(); // perform bitwise NOT to the bytes
+                    if (valueBytes.Length % 2 != 0)
                     {
-                        bw.Write(Encoding.ASCII.GetBytes(" RTS"));
-                        var valueBytes = Encoding.Unicode.GetBytes(valueStr);
-                        valueBytes = valueBytes.Select(v => (byte)(~v)).ToArray(); // perform bitwise NOT to the bytes
-                        if (valueBytes.Length % 2 != 0)
-                        {
-                            throw new Exception("Unexpected UTF-16 LE bytes. Why do I get an odd number of bytes? It should never happens.");
-                        }
-                        bw.Write(valueBytes.Length / 2);
-                        bw.Write(valueBytes);
+                        throw new Exception("Unexpected UTF-16 LE bytes. Why do I get an odd number of bytes? It should never happens.");
                     }
+                    bw.Write(valueBytes.Length / 2);
+                    bw.Write(valueBytes);
                 }
             }
         }
@@ -200,17 +207,8 @@ namespace SadPencil.Ra2CsfFile
         /// </summary>
         /// <param name="value">The integer to be converted.</param>
         /// <returns>The corresponding CsfLang enum.</returns>
-        public static CsfLang GetCsfLang(Int32 value)
-        {
-            if (typeof(CsfLang).IsEnumDefined(value))
-            {
-                return (CsfLang)value;
-            }
-            else
-            {
-                return CsfLang.Unknown;
-            }
-        }
+        [Obsolete("Please use CsfLangHelper.GetCsfLang() instead.")]
+        public static CsfLang GetCsfLang(Int32 value) => CsfLangHelper.GetCsfLang(value);
         /// <summary>
         /// Check whether the name of a label is valid. A valid label name is an ASCII string without spaces, tabs, line breaks, and invisible characters.
         /// </summary>
@@ -222,5 +220,18 @@ namespace SadPencil.Ra2CsfFile
             // do not contains spaces, tabs and line breaks
             return labelName.ToCharArray().Where(c => (c <= 32 || c >= 127)).Count() == 0;
         }
+        /// <summary>
+        /// Load an existing ini file that represent the stringtable.
+        /// </summary>
+        /// <param name="stream">The file stream of an ini file.</param>
+        [Obsolete("Please use CsfFileIniHelper.LoadFromIniFile() instead.")]
+        public static CsfFile LoadFromIniFile(Stream stream) => CsfFileIniHelper.LoadFromIniFile(stream);
+
+        /// <summary>
+        /// Write an ini file that represent the stringtable.
+        /// </summary>
+        /// <param name="stream">The file stream of a new ini file.</param>
+        [Obsolete("Please use CsfFileIniHelper.WriteIniFile() instead.")]
+        public void WriteIniFile(Stream stream) => CsfFileIniHelper.WriteIniFile(this, stream);
     }
 }
