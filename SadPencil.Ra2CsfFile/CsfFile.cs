@@ -45,9 +45,9 @@ namespace SadPencil.Ra2CsfFile
 
 
         /// <summary>
-        /// Load an existing stringtable file.
+        /// Load an existing stringtable file (.csf).
         /// </summary>
-        /// <param name="stream">The file stream of a stringtable file.</param>
+        /// <param name="stream">The file stream of a stringtable file (.csf).</param>
         public static CsfFile LoadFromCsfFile(Stream stream)
         {
             var csf = new CsfFile();
@@ -153,9 +153,9 @@ namespace SadPencil.Ra2CsfFile
         }
 
         /// <summary>
-        /// Write a stringtable file.
+        /// Write a stringtable file (.csf).
         /// </summary>
-        /// <param name="stream">The file stream of a new stringtable file.</param>
+        /// <param name="stream">The file stream of a new stringtable file (.csf).</param>
         public void WriteCsfFile(Stream stream)
         {
             using (var bw = new BinaryWriter(stream))
@@ -338,7 +338,11 @@ namespace SadPencil.Ra2CsfFile
             }
         }
 
-
+        /// <summary>
+        /// Converts an Int32 integer to CsfLang enum. Return CsfLang.Unknown for unknown integers.
+        /// </summary>
+        /// <param name="value">The integer to be converted.</param>
+        /// <returns>The corresponding CsfLang enum.</returns>
         public static CsfLang GetCsfLang(Int32 value)
         {
             if (typeof(CsfLang).IsEnumDefined(value))
@@ -350,7 +354,11 @@ namespace SadPencil.Ra2CsfFile
                 return CsfLang.Unknown;
             }
         }
-
+        /// <summary>
+        /// Check whether the name of a label is valid. A valid label name is an ASCII string without spaces, tabs, line breaks, and invisible characters.
+        /// </summary>
+        /// <param name="labelName">The name of a label to be checked.</param>
+        /// <returns>Whether the name is valid or not.</returns>
         public static bool ValidateLabelName(string labelName)
         {
             // is an ASCII string

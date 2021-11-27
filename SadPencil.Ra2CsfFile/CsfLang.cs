@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SadPencil.Ra2CsfFile
 {
+    /// <summary>
+    /// The language field in the string table file.
+    /// </summary>
     public enum CsfLang
     {
         EnglishUS = 0,
