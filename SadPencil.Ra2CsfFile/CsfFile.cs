@@ -42,10 +42,10 @@ namespace SadPencil.Ra2CsfFile
         /// </summary>
         public Int32 Version { get; set; } = 3;
         /// <summary>
-        /// Add a label to the string table. The label name will be checked and converted to lowercase. <br/>
+        /// Add a label to the string table. The label name will be checked. The label name must be lowercase. <br/>
         /// If the label value contains multiple lines, use LineBreakCharacters to separate the line.
         /// </summary>
-        /// <param name="labelName">The label name.</param>
+        /// <param name="labelName">The label name. Must be lowercase.</param>
         /// <param name="labelValue">The label value.</param>
         public void AddLabel(string labelName, string labelValue)
         {
@@ -53,9 +53,22 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception("Invalid characters found in label name.");
             }
-            labelName = LowercaseLabelName(labelName);
+            if (labelName != LowercaseLabelName(labelName))
+            {
+                throw new Exception("As the label name is case-insensitive, the label name should be in lower case. Use Csf.LowercaseLabelName() to convert.");
+            }
 
             this._labels.Add(labelName, labelValue);
+        }
+
+        /// <summary>
+        /// Remove a label from the string table.
+        /// </summary>
+        /// <param name="labelName">The label name.</param>
+        /// <returns>True if the element is found and removed.</returns>
+        public bool RemoveLabel(string labelName)
+        {
+            return this._labels.Remove(labelName);
         }
 
         /// <summary>
@@ -293,7 +306,7 @@ namespace SadPencil.Ra2CsfFile
             // is an ASCII string
             // do not contains tabs and line breaks
             // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
-            return labelName.ToCharArray().Where(c => (c < 32 || c >= 127)).Count() == 0;
+            return !labelName.ToCharArray().Any(c => (c < 32 || c >= 127));
         }
         /// <summary>
         /// As RA2 is case insensitive about the label name, the library will converts all label names to lowercase.

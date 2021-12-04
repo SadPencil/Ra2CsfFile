@@ -176,11 +176,6 @@ namespace SadPencil.Ra2CsfFile
                     string keyValue = valueSplited[iLine - 1];
 
                     _ = labelSection.AddKey(keyName, keyValue);
-
-                    if (keyName.Contains("#") || keyValue.Contains("#"))
-                    {
-                        throw new Exception("When saving to INI file, the character # is not allowed in the label name or value.");
-                    }
                 }
             }
 

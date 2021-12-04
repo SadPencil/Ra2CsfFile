@@ -14,6 +14,8 @@ namespace SadPencil.Ra2CsfFile
 
         static Encoding1252Workaround()
         {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
             Dictionary<char, char> encoding1252ToUnicode = new Dictionary<char, char>();
             Dictionary<char, char> unicodeToEncoding1252 = new Dictionary<char, char>();
             for (int i = 128; i <= 159; i++)
