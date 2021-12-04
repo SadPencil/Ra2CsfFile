@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,19 @@ namespace SadPencil.Ra2CsfFile
         private const string INI_FILE_HEADER_CSF_VERSION_KEY = "CsfVersion";
         private const string INI_FILE_HEADER_CSF_LANGUAGE_KEY = "CsfLang";
 
+        private const int INI_VERSION = 2;
+        private static IniFile NewIniFile()
+        {
+            IniOptions iniOptions = new IniOptions();
+            iniOptions.SectionDuplicate = IniDuplication.Disallowed;
+            iniOptions.KeyDuplicate = IniDuplication.Disallowed;
+            iniOptions.SectionNameCaseSensitive = false;
+            iniOptions.CommentStarter = IniCommentStarter.Hash;
+
+            IniFile iniFile = new IniFile();
+            return iniFile;
+        }
+
         /// <summary>
         /// Load an existing ini file that represent the stringtable.
         /// </summary>
@@ -33,7 +47,7 @@ namespace SadPencil.Ra2CsfFile
         {
             CsfFile csf = new CsfFile(options);
 
-            IniFile ini = new IniFile();
+            IniFile ini = NewIniFile();
             using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
             {
                 ini.Load(sr);
@@ -51,9 +65,9 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_INI_VERSION_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
-            if (Convert.ToInt32(iniVersion, CultureInfo.InvariantCulture) != 1)
+            if (Convert.ToInt32(iniVersion, CultureInfo.InvariantCulture) != INI_VERSION)
             {
-                throw new Exception($"Unknown {INI_TYPE_NAME} file version. The version should be 1. Is this a {INI_TYPE_NAME} file from future?");
+                throw new Exception($"Unknown {INI_TYPE_NAME} file version. The version should be {INI_VERSION}. Is this a {INI_TYPE_NAME} file from future?");
             }
 
             var csfVersion = header.Keys.FirstOrDefault(key => key.Name == INI_FILE_HEADER_CSF_VERSION_KEY)?.Value;
@@ -114,12 +128,12 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a new ini file.</param>
         public static void WriteIniFile(CsfFile csf, Stream stream)
         {
-            IniFile ini = new IniFile();
+            IniFile ini = NewIniFile();
 
             // write headers
             _ = ini.Sections.Add(INI_FILE_HEADER_SECTION_NAME, new Dictionary<string, string>()
             {
-                { INI_FILE_HEADER_INI_VERSION_KEY, 1.ToString(CultureInfo.InvariantCulture) },
+                { INI_FILE_HEADER_INI_VERSION_KEY, INI_VERSION.ToString(CultureInfo.InvariantCulture) },
                 { INI_FILE_HEADER_CSF_VERSION_KEY, csf.Version.ToString(CultureInfo.InvariantCulture) },
                 { INI_FILE_HEADER_CSF_LANGUAGE_KEY, ((int)csf.Language).ToString(CultureInfo.InvariantCulture) },
             });
@@ -144,6 +158,11 @@ namespace SadPencil.Ra2CsfFile
                     string keyName = GetIniLabelValueKeyName(iLine);
                     string keyValue = valueSplited[iLine - 1];
                     _ = labelSection.Keys.Add(keyName, keyValue);
+
+                    if (keyName.Contains("#") || keyValue.Contains("#"))
+                    {
+                        throw new Exception("When saving to INI file, the character # is not allowed in the label name or value.");
+                    }
                 }
             }
 
