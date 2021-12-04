@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>sadpencil</Authors>
-    <AssemblyVersion>2.0.1</AssemblyVersion>
-    <FileVersion>2.0.1</FileVersion>
+    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <FileVersion>2.0.2</FileVersion>
     <PackageProjectUrl>https://github.com/SadPencil/Ra2CsfFile</PackageProjectUrl>
     <Description>Load, edit, and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.</Description>
     <Copyright>Copyright © Sad Pencil 2021</Copyright>
@@ -14,9 +14,9 @@
     <PackageTags>CSF Westwood Red-Alert-2 RA2</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>migrate to .NET Standard 2.0; replace dependency MadMilkman.Ini with ini-parser-netstandard; add Csf.RemoveLabel() method; fix a bug that CSF file with non-lowercase label name can not be loaded.</PackageReleaseNotes>
+    <PackageReleaseNotes>remove the space around the "=" sign of ini file to fix a bug proceeding with values contains " = " pattern</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
