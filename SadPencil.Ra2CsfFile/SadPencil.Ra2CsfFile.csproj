@@ -17,6 +17,7 @@
     <Version>2.0.0</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageReleaseNotes>v2.0.0: migrate to .NET Standard 2.0; replace dependency MadMilkman.Ini with ini-parser-netstandard; add Csf.RemoveLabel() method.</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
