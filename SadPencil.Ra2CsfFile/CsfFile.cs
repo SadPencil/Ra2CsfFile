@@ -163,6 +163,7 @@ namespace SadPencil.Ra2CsfFile
                     try
                     {
                         labelNameStr = Encoding.ASCII.GetString(labelName);
+                        labelNameStr = LowercaseLabelName(labelNameStr);
                     }
                     catch (Exception)
                     {
