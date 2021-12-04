@@ -5,7 +5,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using MadMilkman.Ini;
+using IniParser;
+using IniParser.Model;
+using IniParser.Model.Configuration;
+using IniParser.Parser;
 
 namespace SadPencil.Ra2CsfFile
 {
@@ -21,16 +24,27 @@ namespace SadPencil.Ra2CsfFile
         private const string INI_FILE_HEADER_CSF_LANGUAGE_KEY = "CsfLang";
 
         private const int INI_VERSION = 2;
-        private static IniFile NewIniFile()
+        private static IniParserConfiguration IniParserConfiguration { get; } = new IniParserConfiguration()
         {
-            IniOptions iniOptions = new IniOptions();
-            iniOptions.SectionDuplicate = IniDuplication.Disallowed;
-            iniOptions.KeyDuplicate = IniDuplication.Disallowed;
-            iniOptions.SectionNameCaseSensitive = false;
-            iniOptions.CommentStarter = IniCommentStarter.Hash;
+            AllowDuplicateKeys = false,
+            AllowDuplicateSections = false,
+            AllowKeysWithoutSection = false,
+            CommentRegex = new System.Text.RegularExpressions.Regex("a^"), // match nothing
+            CaseInsensitive = true,
+        };
 
-            IniFile iniFile = new IniFile();
-            return iniFile;
+        private static IniData GetIniData() => new IniData() { Configuration = IniParserConfiguration, };
+
+        private static IniDataParser GetIniDataParser() => new IniDataParser(IniParserConfiguration);
+
+        private static IniData ParseIni(Stream stream)
+        {
+            var parser = new IniDataParser(IniParserConfiguration);
+
+            using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
+            {
+                return parser.Parse(sr.ReadToEnd());
+            }
         }
 
         /// <summary>
@@ -47,48 +61,52 @@ namespace SadPencil.Ra2CsfFile
         {
             CsfFile csf = new CsfFile(options);
 
-            IniFile ini = NewIniFile();
-            using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
-            {
-                ini.Load(sr);
-            }
-
-            var header = ini.Sections.FirstOrDefault(section => section.Name == INI_FILE_HEADER_SECTION_NAME);
-            if (header == null)
+            var ini = ParseIni(stream);
+            if (!ini.Sections.ContainsSection(INI_FILE_HEADER_SECTION_NAME))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
+            var header = ini.Sections[INI_FILE_HEADER_SECTION_NAME];
+
 
             // load header
-            var iniVersion = header.Keys.FirstOrDefault(key => key.Name == INI_FILE_HEADER_INI_VERSION_KEY)?.Value;
-            if (iniVersion == null)
+            if (!header.ContainsKey(INI_FILE_HEADER_INI_VERSION_KEY))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_INI_VERSION_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
+            var iniVersion = header[INI_FILE_HEADER_INI_VERSION_KEY];
             if (Convert.ToInt32(iniVersion, CultureInfo.InvariantCulture) != INI_VERSION)
             {
                 throw new Exception($"Unknown {INI_TYPE_NAME} file version. The version should be {INI_VERSION}. Is this a {INI_TYPE_NAME} file from future?");
             }
 
-            var csfVersion = header.Keys.FirstOrDefault(key => key.Name == INI_FILE_HEADER_CSF_VERSION_KEY)?.Value;
-            if (csfVersion == null)
+            if (!header.ContainsKey(INI_FILE_HEADER_CSF_VERSION_KEY))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_CSF_VERSION_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
+            var csfVersion = header[INI_FILE_HEADER_CSF_VERSION_KEY];
             csf.Version = Convert.ToInt32(csfVersion, CultureInfo.InvariantCulture);
 
-            var csfLang = header.Keys.FirstOrDefault(key => key.Name == INI_FILE_HEADER_CSF_LANGUAGE_KEY)?.Value;
-            if (csfLang == null)
+            if (!header.ContainsKey(INI_FILE_HEADER_CSF_LANGUAGE_KEY))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_CSF_LANGUAGE_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
+            var csfLang = header[INI_FILE_HEADER_CSF_LANGUAGE_KEY];
             csf.Language = CsfLangHelper.GetCsfLang(Convert.ToInt32(csfLang, CultureInfo.InvariantCulture));
 
             // load all labels
-            var labelSections = ini.Sections.Where(section => section.Name != INI_FILE_HEADER_SECTION_NAME);
-            foreach (var labelSection in labelSections)
+            var labelSections = new Dictionary<string, KeyDataCollection>();
+            foreach (var (k, v) in ini.Sections.Where(section => section.SectionName != INI_FILE_HEADER_SECTION_NAME)
+                .Select(section => (section.SectionName, ini.Sections[section.SectionName])))
             {
-                string labelName = labelSection.Name;
+                labelSections.Add(k, v);
+            }
+
+            foreach (var keyValuePair in labelSections)
+            {
+                string labelName = keyValuePair.Key;
+                var key = keyValuePair.Value;
+
                 if (!CsfFile.ValidateLabelName(labelName))
                 {
                     throw new Exception($"Invalid characters found in label name \"{labelName}\".");
@@ -98,14 +116,13 @@ namespace SadPencil.Ra2CsfFile
                 for (int iLine = 1; ; iLine++)
                 {
                     string keyName = GetIniLabelValueKeyName(iLine);
-                    var value = labelSection.Keys.FirstOrDefault(key => key.Name == keyName);
 
-                    if (value == null)
+                    if (!key.ContainsKey(keyName))
                     {
                         break;
                     }
 
-                    valueSplited.Add(value.Value);
+                    valueSplited.Add(key[keyName]);
                 }
 
                 if (valueSplited.Count != 0)
@@ -128,15 +145,14 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a new ini file.</param>
         public static void WriteIniFile(CsfFile csf, Stream stream)
         {
-            IniFile ini = NewIniFile();
+            var ini = GetIniData();
 
             // write headers
-            _ = ini.Sections.Add(INI_FILE_HEADER_SECTION_NAME, new Dictionary<string, string>()
-            {
-                { INI_FILE_HEADER_INI_VERSION_KEY, INI_VERSION.ToString(CultureInfo.InvariantCulture) },
-                { INI_FILE_HEADER_CSF_VERSION_KEY, csf.Version.ToString(CultureInfo.InvariantCulture) },
-                { INI_FILE_HEADER_CSF_LANGUAGE_KEY, ((int)csf.Language).ToString(CultureInfo.InvariantCulture) },
-            });
+            _ = ini.Sections.AddSection(INI_FILE_HEADER_SECTION_NAME);
+            var header = ini.Sections[INI_FILE_HEADER_SECTION_NAME];
+            _ = header.AddKey(INI_FILE_HEADER_INI_VERSION_KEY, INI_VERSION.ToString(CultureInfo.InvariantCulture));
+            _ = header.AddKey(INI_FILE_HEADER_CSF_VERSION_KEY, csf.Version.ToString(CultureInfo.InvariantCulture));
+            _ = header.AddKey(INI_FILE_HEADER_CSF_LANGUAGE_KEY, ((int)csf.Language).ToString(CultureInfo.InvariantCulture));
 
             // write labels
             foreach (var labelNameValues in csf.Labels)
@@ -149,7 +165,8 @@ namespace SadPencil.Ra2CsfFile
                     throw new Exception($"Invalid characters found in label name \"{labelName}\".");
                 }
 
-                var labelSection = ini.Sections.Add(labelName);
+                _ = ini.Sections.AddSection(labelName);
+                var labelSection = ini.Sections[labelName];
 
                 var value = labelValue;
                 var valueSplited = value.Split(CsfFile.LineBreakCharacters.ToCharArray());
@@ -157,7 +174,8 @@ namespace SadPencil.Ra2CsfFile
                 {
                     string keyName = GetIniLabelValueKeyName(iLine);
                     string keyValue = valueSplited[iLine - 1];
-                    _ = labelSection.Keys.Add(keyName, keyValue);
+
+                    _ = labelSection.AddKey(keyName, keyValue);
 
                     if (keyName.Contains("#") || keyValue.Contains("#"))
                     {
@@ -168,7 +186,7 @@ namespace SadPencil.Ra2CsfFile
 
             using (var sw = new StreamWriter(stream, new UTF8Encoding(false)))
             {
-                ini.Save(sw);
+                sw.Write(ini.ToString());
             }
         }
     }
