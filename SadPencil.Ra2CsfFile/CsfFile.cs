@@ -73,6 +73,18 @@ namespace SadPencil.Ra2CsfFile
         }
 
         /// <summary>
+        /// Clone the CsfFile.
+        /// </summary>
+        /// <param name="csf">The CsfFile object.</param>
+        public CsfFile(CsfFile csf)
+        {
+            this.Version = csf.Version;
+            this.Language = csf.Language;
+            this.Options = csf.Options;
+            this._labels = new Dictionary<string, string>(csf._labels);
+        }
+
+        /// <summary>
         /// Load an existing stringtable file (.csf).<br/>
         /// <br/>
         /// Note: for those labels that has more than one values, only the first value is reserved. It has no effect on gaming. <br/>
