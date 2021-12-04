@@ -217,8 +217,9 @@ namespace SadPencil.Ra2CsfFile
         public static bool ValidateLabelName(string labelName)
         {
             // is an ASCII string
-            // do not contains spaces, tabs and line breaks
-            return labelName.ToCharArray().Where(c => (c <= 32 || c >= 127)).Count() == 0;
+            // do not contains tabs and line breaks
+            // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
+            return labelName.ToCharArray().Where(c => (c < 32 || c >= 127)).Count() == 0;
         }
         /// <summary>
         /// Load an existing ini file that represent the stringtable.
