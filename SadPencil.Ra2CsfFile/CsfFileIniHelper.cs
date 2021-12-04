@@ -45,7 +45,7 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_INI_VERSION_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
-            if (Convert.ToInt32(iniVersion) != 1)
+            if (Convert.ToInt32(iniVersion, CultureInfo.InvariantCulture) != 1)
             {
                 throw new Exception($"Unknown {INI_TYPE_NAME} file version. The version should be 1. Is this a {INI_TYPE_NAME} file from future?");
             }
