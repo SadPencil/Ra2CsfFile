@@ -42,12 +42,13 @@ namespace SadPencil.Ra2CsfFile
         /// </summary>
         public Int32 Version { get; set; } = 3;
         /// <summary>
-        /// Add a label to the string table. The label name will be checked. The label name must be lowercase. <br/>
+        /// Add or replace a label to the string table. The label name will be checked. The label name must be lowercase. <br/>
         /// If the label value contains multiple lines, use LineBreakCharacters to separate the line.
         /// </summary>
         /// <param name="labelName">The label name. Must be lowercase.</param>
         /// <param name="labelValue">The label value.</param>
-        public void AddLabel(string labelName, string labelValue)
+        /// <returns>True if an existing element is found and replaced.</returns>
+        public bool AddLabel(string labelName, string labelValue)
         {
             if (!ValidateLabelName(labelName))
             {
@@ -57,8 +58,16 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception("As the label name is case-insensitive, the label name should be in lower case. Use Csf.LowercaseLabelName() to convert.");
             }
-
-            this._labels.Add(labelName, labelValue);
+            if (this.Labels.ContainsKey(labelName))
+            {
+                this._labels[labelName] = labelValue;
+                return true;
+            }
+            else
+            {
+                this._labels.Add(labelName, labelValue);
+                return false;
+            }
         }
 
         /// <summary>
