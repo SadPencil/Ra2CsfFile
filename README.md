@@ -1,6 +1,6 @@
 # SadPencil.Ra2CsfFile
 
-v1.2.0
+v1.2.1
 
 ## Converters
 This is a tool that converts CSF file from/to INI file. The INI file is much more friendly to editing, cooperating with others, and to be stored in Git. It is recommended that only saves the INI file. The CSF file should be derived from the INI file, just like compiling a program file into an executable.
