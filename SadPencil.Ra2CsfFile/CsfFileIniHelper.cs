@@ -31,6 +31,7 @@ namespace SadPencil.Ra2CsfFile
             AllowKeysWithoutSection = false,
             CommentRegex = new System.Text.RegularExpressions.Regex("a^"), // match nothing
             CaseInsensitive = true,
+            AssigmentSpacer = String.Empty,
         };
 
         private static IniData GetIniData() => new IniData() { Configuration = IniParserConfiguration, };
