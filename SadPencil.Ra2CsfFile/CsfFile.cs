@@ -28,7 +28,7 @@ namespace SadPencil.Ra2CsfFile
         /// <summary>
         /// The line break characters between the multiple lines in the label value.
         /// </summary>
-        public string LineBreakCharacters { get; } = "\n";
+        public static string LineBreakCharacters { get; } = "\n";
 
         /// <summary>
         /// The language of this file.
@@ -83,7 +83,7 @@ namespace SadPencil.Ra2CsfFile
             this.Options = csf.Options;
             this._labels = new Dictionary<string, string>(csf._labels);
         }
-        
+
         public object Clone()
         {
             return new CsfFile(this);

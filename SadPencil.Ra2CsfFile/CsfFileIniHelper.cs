@@ -96,7 +96,7 @@ namespace SadPencil.Ra2CsfFile
 
                 if (valueSplited.Count != 0)
                 {
-                    string labelValue = string.Join("\n", valueSplited);
+                    string labelValue = string.Join(CsfFile.LineBreakCharacters, valueSplited);
                     csf.AddLabel(labelName, labelValue);
                 }
 
@@ -138,7 +138,7 @@ namespace SadPencil.Ra2CsfFile
                 var labelSection = ini.Sections.Add(labelName);
 
                 var value = labelValue;
-                var valueSplited = value.Split('\n');
+                var valueSplited = value.Split(CsfFile.LineBreakCharacters.ToCharArray());
                 for (int iLine = 1; iLine <= valueSplited.Length; iLine++)
                 {
                     string keyName = GetIniLabelValueKeyName(iLine);
