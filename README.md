@@ -17,6 +17,8 @@ Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 ## Version History
 
 ```
+v2.0.2: remove the space around the "=" sign of ini file to fix a bug proceeding with values contains " = " pattern
+v2.0.1: fix a bug that CSF file with non-lowercase label name can not be loaded
 v2.0.0: migrate to .NET Standard 2.0; replace dependency MadMilkman.Ini with ini-parser-netstandard; add Csf.RemoveLabel() method.
 v1.3.1: api breaking change: Labels.Add will be replaced with AddLabel; add encoding 1252 workaround options for the original RA2 fonts; add clone constructor for CsfFile. 
 v1.2.2: space in labels is now tolerated so that the library will not complain about the string table file in RA2.
