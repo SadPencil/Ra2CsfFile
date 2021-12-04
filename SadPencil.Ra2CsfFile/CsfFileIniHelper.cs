@@ -42,7 +42,7 @@ namespace SadPencil.Ra2CsfFile
 
         private static IniData ParseIni(Stream stream)
         {
-            var parser = new IniDataParser(IniParserConfiguration);
+            var parser = GetIniDataParser();
 
             using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
             {
