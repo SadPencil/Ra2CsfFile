@@ -23,9 +23,15 @@ namespace SadPencil.Ra2CsfFile
         /// Load an existing ini file that represent the stringtable.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
-        public static CsfFile LoadFromIniFile(Stream stream)
+        public static CsfFile LoadFromIniFile(Stream stream) => LoadFromIniFile(stream, new CsfFileOptions());
+        /// <summary>
+        /// Load an existing ini file that represent the stringtable.
+        /// </summary>
+        /// <param name="stream">The file stream of an ini file.</param>
+        /// <param name="options">The CsfFileOptions.</param>
+        public static CsfFile LoadFromIniFile(Stream stream, CsfFileOptions options)
         {
-            CsfFile csf = new CsfFile();
+            CsfFile csf = new CsfFile(options);
 
             IniFile ini = new IniFile();
             using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
@@ -91,7 +97,7 @@ namespace SadPencil.Ra2CsfFile
                 if (valueSplited.Count != 0)
                 {
                     string labelValue = string.Join("\n", valueSplited);
-                    csf.Labels.Add(labelName, labelValue);
+                    csf.AddLabel(labelName, labelValue);
                 }
 
             }

@@ -49,8 +49,10 @@
   <ItemGroup>
     <Compile Include="CsfFile.cs" />
     <Compile Include="CsfFileIniHelper.cs" />
+    <Compile Include="CsfFileOptions.cs" />
     <Compile Include="CsfLang.cs" />
     <Compile Include="CsfLangHelper.cs" />
+    <Compile Include="Encoding1252Workaround.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

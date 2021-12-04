@@ -15,9 +15,21 @@ namespace SadPencil.Ra2CsfFile
         // https://modenc.renegadeprojects.com/CSF_File_Format
 
         /// <summary>
+        /// This option controls the behavior of CsfFile.
+        /// </summary>
+        public CsfFileOptions Options { get; set; } = new CsfFileOptions();
+
+        private readonly Dictionary<string, string> _labels = new Dictionary<string, string>();
+        /// <summary>
         /// The labels of this file. Each label has a name, and a string, which are the dictionary keys and values.        
         /// </summary>
-        public IDictionary<string, string> Labels { get; } = new Dictionary<string, string>();
+        public IReadOnlyDictionary<string, string> Labels { get { return this._labels; } }
+
+        /// <summary>
+        /// The line break characters between the multiple lines in the label value.
+        /// </summary>
+        public string LineBreakCharacters { get; } = "\n";
+
         /// <summary>
         /// The language of this file.
         /// </summary>
@@ -29,11 +41,36 @@ namespace SadPencil.Ra2CsfFile
         /// Nothing is known about the actual difference between the versions.
         /// </summary>
         public Int32 Version { get; set; } = 3;
+        /// <summary>
+        /// Add a label to the string table. The label name will be checked and converted to lowercase. <br/>
+        /// If the label value contains multiple lines, use LineBreakCharacters to separate the line.
+        /// </summary>
+        /// <param name="labelName">The label name.</param>
+        /// <param name="labelValue">The label value.</param>
+        public void AddLabel(string labelName, string labelValue)
+        {
+            if (!ValidateLabelName(labelName))
+            {
+                throw new Exception("Invalid characters found in label name.");
+            }
+            labelName = LowercaseLabelName(labelName);
+
+            this._labels.Add(labelName, labelValue);
+        }
 
         /// <summary>
-        /// Create an empty stringtable file.
+        /// Create an empty stringtable file with default options.
         /// </summary>
         public CsfFile() { }
+
+        /// <summary>
+        /// Create an empty stringtable file with given options.
+        /// </summary>
+        /// <param name="options">The CsfFileOptions.</param>
+        public CsfFile(CsfFileOptions options)
+        {
+            this.Options = options;
+        }
 
         /// <summary>
         /// Load an existing stringtable file (.csf).<br/>
@@ -42,9 +79,20 @@ namespace SadPencil.Ra2CsfFile
         /// Note: the 'Extra Value' of a label is ignored. It has no effect on gaming.
         /// </summary>
         /// <param name="stream">The file stream of a stringtable file (.csf).</param>
-        public static CsfFile LoadFromCsfFile(Stream stream)
+        public static CsfFile LoadFromCsfFile(Stream stream) => LoadFromCsfFile(stream, new CsfFileOptions());
+
+
+        /// <summary>
+        /// Load an existing stringtable file (.csf).<br/>
+        /// <br/>
+        /// Note: for those labels that has more than one values, only the first value is reserved. It has no effect on gaming. <br/>
+        /// Note: the 'Extra Value' of a label is ignored. It has no effect on gaming.
+        /// </summary>
+        /// <param name="stream">The file stream of a stringtable file (.csf).</param>
+        /// <param name="options">The CsfFileOptions.</param>
+        public static CsfFile LoadFromCsfFile(Stream stream, CsfFileOptions options)
         {
-            var csf = new CsfFile();
+            var csf = new CsfFile(options);
             using (var br = new BinaryReader(stream, Encoding.ASCII)) // the file has multiple encoding, but ASCII is here used to use BinaryReader.ReadChars()
             {
                 // read headers
@@ -125,6 +173,10 @@ namespace SadPencil.Ra2CsfFile
                         try
                         {
                             valueStr = Encoding.Unicode.GetString(value);
+                            if (options.Encoding1252ReadWorkaround)
+                            {
+                                valueStr = Encoding1252Workaround.ConvertsUnicodeToEncoding1252(valueStr);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -147,7 +199,7 @@ namespace SadPencil.Ra2CsfFile
                     if (labelValue != null)
                     {
                         // append
-                        csf.Labels.Add(labelNameStr, labelValue);
+                        csf.AddLabel(labelNameStr, labelValue);
                     }
                 }
             }
@@ -165,9 +217,9 @@ namespace SadPencil.Ra2CsfFile
                 // write header
                 bw.Write(Encoding.ASCII.GetBytes(" FSC")); // csf header
                 bw.Write(this.Version); // version
-                int numLabels = this.Labels.Keys.Count;
+                int numLabels = this.Labels.Count;
                 bw.Write(numLabels);
-                int numValues = this.Labels.Values.Count;
+                int numValues = this.Labels.Count;
                 bw.Write(numValues);
                 bw.Write((Int32)0); // unused
                 bw.Write((Int32)this.Language);
@@ -176,6 +228,11 @@ namespace SadPencil.Ra2CsfFile
                 {
                     var labelName = labelNameValues.Key;
                     var labelValue = labelNameValues.Value;
+
+                    if (this.Options.Encoding1252WriteWorkaround)
+                    {
+                        labelValue = Encoding1252Workaround.ConvertsEncoding1252ToUnicode(labelValue);
+                    }
 
                     if (!ValidateLabelName(labelName))
                     {
@@ -220,6 +277,15 @@ namespace SadPencil.Ra2CsfFile
             // do not contains tabs and line breaks
             // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
             return labelName.ToCharArray().Where(c => (c < 32 || c >= 127)).Count() == 0;
+        }
+        /// <summary>
+        /// As RA2 is case insensitive about the label name, the library will converts all label names to lowercase.
+        /// </summary>
+        /// <param name="labelName"></param>
+        /// <returns></returns>
+        public static string LowercaseLabelName(string labelName)
+        {
+            return labelName.ToLowerInvariant();
         }
         /// <summary>
         /// Load an existing ini file that represent the stringtable.
