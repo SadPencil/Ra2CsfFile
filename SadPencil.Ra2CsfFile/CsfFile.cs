@@ -10,7 +10,7 @@ namespace SadPencil.Ra2CsfFile
     /// <summary>
     /// This class reads and writes the stringtable file (.csf) that is used by RA2/YR. <br/>
     /// </summary>
-    public class CsfFile
+    public class CsfFile : ICloneable
     {
         // https://modenc.renegadeprojects.com/CSF_File_Format
 
@@ -82,6 +82,11 @@ namespace SadPencil.Ra2CsfFile
             this.Language = csf.Language;
             this.Options = csf.Options;
             this._labels = new Dictionary<string, string>(csf._labels);
+        }
+        
+        public object Clone()
+        {
+            return new CsfFile(this);
         }
 
         /// <summary>
@@ -312,5 +317,6 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a new ini file.</param>
         [Obsolete("Please use CsfFileIniHelper.WriteIniFile() instead.")]
         public void WriteIniFile(Stream stream) => CsfFileIniHelper.WriteIniFile(this, stream);
+
     }
 }
