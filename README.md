@@ -1,7 +1,5 @@
 # SadPencil.Ra2CsfFile
 
-v2.0.0
-
 ## .NET Library
 This is a .NET Standard 2.0 Library to load, edit, and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.
 
