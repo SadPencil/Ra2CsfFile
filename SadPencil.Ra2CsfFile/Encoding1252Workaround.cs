@@ -40,7 +40,7 @@ namespace SadPencil.Ra2CsfFile
         }
 
         public static string ConvertsEncoding1252ToUnicode(string value) => new string(value.ToCharArray().Select(c => (Encoding1252ToUnicode.ContainsKey(c) ? Encoding1252ToUnicode[c] : c)).ToArray());
-        public static string ConvertsUnicodeToEncoding1252(string value) => new string(value.ToCharArray().Select(c => (UnicodeToEncoding1252.ContainsKey(c) ? Encoding1252ToUnicode[c] : c)).ToArray());
+        public static string ConvertsUnicodeToEncoding1252(string value) => new string(value.ToCharArray().Select(c => (UnicodeToEncoding1252.ContainsKey(c) ? UnicodeToEncoding1252[c] : c)).ToArray());
 
     }
 }
