@@ -20,7 +20,7 @@ v1.1.0: fix a bug where multi-line text will be trimmed mistakenly; invalid char
     <copyright>Copyright © Sad Pencil 2021</copyright>
     <tags>CSF Westwood Red-Alert-2 RA2</tags>
     <dependencies>
-      <group targetFramework="net40">
+      <group targetFramework="net48">
         <dependency id="MadMilkman.Ini" version="1.0.6.0" />
       </group>
     </dependencies>
