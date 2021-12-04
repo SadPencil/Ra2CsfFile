@@ -88,13 +88,12 @@ namespace SadPencil.Ra2CsfFile
                     valueSplited.Add(value.Value);
                 }
 
-                if (valueSplited.Count == 0)
+                if (valueSplited.Count != 0)
                 {
-                    break;
+                    string labelValue = string.Join("\n", valueSplited);
+                    csf.Labels.Add(labelName, labelValue);
                 }
 
-                string labelValue = string.Join("\n", valueSplited);
-                csf.Labels.Add(labelName, labelValue);
             }
 
             return csf;
