@@ -1,10 +1,8 @@
-﻿using IniParser;
-using IniParser.Model;
+﻿using IniParser.Model;
 using IniParser.Model.Configuration;
 using IniParser.Parser;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -71,7 +69,6 @@ namespace SadPencil.Ra2CsfFile
             }
             var header = ini.Sections[INI_FILE_HEADER_SECTION_NAME];
 
-
             // load header
             if (!header.ContainsKey(INI_FILE_HEADER_INI_VERSION_KEY))
             {
@@ -132,7 +129,7 @@ namespace SadPencil.Ra2CsfFile
                 {
                     String labelValue = String.Join(CsfFile.LineBreakCharacters, valueSplited);
                     labelName = CsfFile.LowercaseLabelName(labelName);
-                    csf.AddLabel(labelName, labelValue);
+                    _ = csf.AddLabel(labelName, labelValue);
                 }
 
             }

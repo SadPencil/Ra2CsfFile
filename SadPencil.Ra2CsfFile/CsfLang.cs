@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SadPencil.Ra2CsfFile
+﻿namespace SadPencil.Ra2CsfFile
 {
     /// <summary>
     /// The language field in the string table file.
     /// </summary>
     public enum CsfLang
     {
+#pragma warning disable CS1591
         EnglishUS = 0,
         EnglishUK = 1,
         German = 2,
@@ -21,5 +17,6 @@ namespace SadPencil.Ra2CsfFile
         Korean = 8,
         Chinese = 9,
         Unknown = -1, // any value that is not from 0 to 9
+#pragma warning restore CS1591
     }
 }

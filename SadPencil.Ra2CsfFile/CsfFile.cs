@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -112,7 +111,6 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a stringtable file (.csf).</param>
         public static CsfFile LoadFromCsfFile(Stream stream) => LoadFromCsfFile(stream, new CsfFileOptions());
 
-
         /// <summary>
         /// Load an existing stringtable file (.csf).<br/>
         /// <br/>
@@ -176,7 +174,6 @@ namespace SadPencil.Ra2CsfFile
                         throw new Exception($"Invalid characters found in label name \"{labelNameStr}\" at position { stream.Position}.");
                     }
 
-
                     // read values
                     // only the first value is preserved; others are useless
                     String labelValue = null;
@@ -231,7 +228,7 @@ namespace SadPencil.Ra2CsfFile
                     if (labelValue != null)
                     {
                         // append
-                        csf.AddLabel(labelNameStr, labelValue);
+                        _ = csf.AddLabel(labelNameStr, labelValue);
                     }
                 }
             }
