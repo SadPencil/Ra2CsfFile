@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+[assembly: CLSCompliant(true)]
 namespace SadPencil.Ra2CsfFile
 {
     /// <summary>
