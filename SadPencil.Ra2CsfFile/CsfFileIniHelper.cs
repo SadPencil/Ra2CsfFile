@@ -1,4 +1,8 @@
-﻿using System;
+﻿using IniParser;
+using IniParser.Model;
+using IniParser.Model.Configuration;
+using IniParser.Parser;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -6,10 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using IniParser;
-using IniParser.Model;
-using IniParser.Model.Configuration;
-using IniParser.Parser;
 
 namespace SadPencil.Ra2CsfFile
 {
@@ -18,13 +18,13 @@ namespace SadPencil.Ra2CsfFile
     /// </summary>
     public static class CsfFileIniHelper
     {
-        private const string INI_TYPE_NAME = "SadPencil.Ra2CsfFile.Ini";
-        private const string INI_FILE_HEADER_SECTION_NAME = "SadPencil.Ra2CsfFile.Ini";
-        private const string INI_FILE_HEADER_INI_VERSION_KEY = "IniVersion";
-        private const string INI_FILE_HEADER_CSF_VERSION_KEY = "CsfVersion";
-        private const string INI_FILE_HEADER_CSF_LANGUAGE_KEY = "CsfLang";
+        private const String INI_TYPE_NAME = "SadPencil.Ra2CsfFile.Ini";
+        private const String INI_FILE_HEADER_SECTION_NAME = "SadPencil.Ra2CsfFile.Ini";
+        private const String INI_FILE_HEADER_INI_VERSION_KEY = "IniVersion";
+        private const String INI_FILE_HEADER_CSF_VERSION_KEY = "CsfVersion";
+        private const String INI_FILE_HEADER_CSF_LANGUAGE_KEY = "CsfLang";
 
-        private const int INI_VERSION = 2;
+        private const Int32 INI_VERSION = 2;
         private static IniParserConfiguration IniParserConfiguration { get; } = new IniParserConfiguration()
         {
             AllowDuplicateKeys = false,
@@ -62,7 +62,7 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="options">The CsfFileOptions.</param>
         public static CsfFile LoadFromIniFile(Stream stream, CsfFileOptions options)
         {
-            CsfFile csf = new CsfFile(options);
+            var csf = new CsfFile(options);
 
             var ini = ParseIni(stream);
             if (!ini.Sections.ContainsSection(INI_FILE_HEADER_SECTION_NAME))
@@ -77,7 +77,7 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_INI_VERSION_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
-            var iniVersion = header[INI_FILE_HEADER_INI_VERSION_KEY];
+            String iniVersion = header[INI_FILE_HEADER_INI_VERSION_KEY];
             if (Convert.ToInt32(iniVersion, CultureInfo.InvariantCulture) != INI_VERSION)
             {
                 throw new Exception($"Unknown {INI_TYPE_NAME} file version. The version should be {INI_VERSION}. Is this a {INI_TYPE_NAME} file from future?");
@@ -87,18 +87,18 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_CSF_VERSION_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
-            var csfVersion = header[INI_FILE_HEADER_CSF_VERSION_KEY];
+            String csfVersion = header[INI_FILE_HEADER_CSF_VERSION_KEY];
             csf.Version = Convert.ToInt32(csfVersion, CultureInfo.InvariantCulture);
 
             if (!header.ContainsKey(INI_FILE_HEADER_CSF_LANGUAGE_KEY))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing key \"{INI_FILE_HEADER_CSF_LANGUAGE_KEY}\" in section [{INI_FILE_HEADER_SECTION_NAME}].");
             }
-            var csfLang = header[INI_FILE_HEADER_CSF_LANGUAGE_KEY];
+            String csfLang = header[INI_FILE_HEADER_CSF_LANGUAGE_KEY];
             csf.Language = CsfLangHelper.GetCsfLang(Convert.ToInt32(csfLang, CultureInfo.InvariantCulture));
 
             // load all labels
-            var labelSections = new Dictionary<string, KeyDataCollection>();
+            var labelSections = new Dictionary<String, KeyDataCollection>();
             foreach (var (k, v) in ini.Sections.Where(section => section.SectionName != INI_FILE_HEADER_SECTION_NAME)
                 .Select(section => (section.SectionName, ini.Sections[section.SectionName])))
             {
@@ -107,7 +107,7 @@ namespace SadPencil.Ra2CsfFile
 
             foreach (var keyValuePair in labelSections)
             {
-                string labelName = keyValuePair.Key;
+                String labelName = keyValuePair.Key;
                 var key = keyValuePair.Value;
 
                 if (!CsfFile.ValidateLabelName(labelName))
@@ -115,10 +115,10 @@ namespace SadPencil.Ra2CsfFile
                     throw new Exception($"Invalid characters found in label name \"{labelName}\".");
                 }
 
-                List<string> valueSplited = new List<string>();
-                for (int iLine = 1; ; iLine++)
+                var valueSplited = new List<String>();
+                for (Int32 iLine = 1; ; iLine++)
                 {
-                    string keyName = GetIniLabelValueKeyName(iLine);
+                    String keyName = GetIniLabelValueKeyName(iLine);
 
                     if (!key.ContainsKey(keyName))
                     {
@@ -130,7 +130,7 @@ namespace SadPencil.Ra2CsfFile
 
                 if (valueSplited.Count != 0)
                 {
-                    string labelValue = string.Join(CsfFile.LineBreakCharacters, valueSplited);
+                    String labelValue = String.Join(CsfFile.LineBreakCharacters, valueSplited);
                     labelName = CsfFile.LowercaseLabelName(labelName);
                     csf.AddLabel(labelName, labelValue);
                 }
@@ -140,7 +140,7 @@ namespace SadPencil.Ra2CsfFile
             return csf;
         }
 
-        private static string GetIniLabelValueKeyName(int lineIndex) => "Value" + ((lineIndex == 1) ? String.Empty : $"Line{lineIndex}");
+        private static String GetIniLabelValueKeyName(Int32 lineIndex) => "Value" + ((lineIndex == 1) ? String.Empty : $"Line{lineIndex}");
 
         /// <summary>
         /// Write an ini file that represent the stringtable.
@@ -156,13 +156,13 @@ namespace SadPencil.Ra2CsfFile
             var header = ini.Sections[INI_FILE_HEADER_SECTION_NAME];
             _ = header.AddKey(INI_FILE_HEADER_INI_VERSION_KEY, INI_VERSION.ToString(CultureInfo.InvariantCulture));
             _ = header.AddKey(INI_FILE_HEADER_CSF_VERSION_KEY, csf.Version.ToString(CultureInfo.InvariantCulture));
-            _ = header.AddKey(INI_FILE_HEADER_CSF_LANGUAGE_KEY, ((int)csf.Language).ToString(CultureInfo.InvariantCulture));
+            _ = header.AddKey(INI_FILE_HEADER_CSF_LANGUAGE_KEY, ((Int32)csf.Language).ToString(CultureInfo.InvariantCulture));
 
             // write labels
             foreach (var labelNameValues in csf.Labels)
             {
-                var labelName = labelNameValues.Key;
-                var labelValue = labelNameValues.Value;
+                String labelName = labelNameValues.Key;
+                String labelValue = labelNameValues.Value;
 
                 if (!CsfFile.ValidateLabelName(labelName))
                 {
@@ -172,12 +172,12 @@ namespace SadPencil.Ra2CsfFile
                 _ = ini.Sections.AddSection(labelName);
                 var labelSection = ini.Sections[labelName];
 
-                var value = labelValue;
-                var valueSplited = value.Split(CsfFile.LineBreakCharacters.ToCharArray());
-                for (int iLine = 1; iLine <= valueSplited.Length; iLine++)
+                String value = labelValue;
+                String[] valueSplited = value.Split(CsfFile.LineBreakCharacters.ToCharArray());
+                for (Int32 iLine = 1; iLine <= valueSplited.Length; iLine++)
                 {
-                    string keyName = GetIniLabelValueKeyName(iLine);
-                    string keyValue = valueSplited[iLine - 1];
+                    String keyName = GetIniLabelValueKeyName(iLine);
+                    String keyValue = valueSplited[iLine - 1];
 
                     _ = labelSection.AddKey(keyName, keyValue);
                 }
