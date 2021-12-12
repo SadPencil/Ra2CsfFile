@@ -29,5 +29,11 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+	
+	<PropertyGroup>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<AnalysisMode>All</AnalysisMode>
+	</PropertyGroup>
 
 </Project>
