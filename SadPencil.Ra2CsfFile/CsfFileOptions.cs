@@ -17,6 +17,8 @@ namespace SadPencil.Ra2CsfFile
         /// Enabling this option will converts there charaters from Unicode ones back to Windows-1252 when saving the .csf file. <br/>
         /// Note: it is recommended to turn this option off. In the original game.fnt file, except for Trade Mark Sign ™, other influenced characters have the correct font data in their Unicode code point. 
         /// </summary>
+#pragma warning disable CA1805
         public Boolean Encoding1252WriteWorkaround { get; set; } = false;
+#pragma warning restore CA1805
     }
 }

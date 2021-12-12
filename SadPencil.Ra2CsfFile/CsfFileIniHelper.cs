@@ -60,6 +60,15 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="options">The CsfFileOptions.</param>
         public static CsfFile LoadFromIniFile(Stream stream, CsfFileOptions options)
         {
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             var csf = new CsfFile(options);
 
             var ini = ParseIni(stream);
@@ -146,6 +155,15 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a new ini file.</param>
         public static void WriteIniFile(CsfFile csf, Stream stream)
         {
+            if (csf == null)
+            {
+                throw new ArgumentNullException(nameof(csf));
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             var ini = GetIniData();
 
             // write headers

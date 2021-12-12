@@ -93,6 +93,11 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="csf">The CsfFile object.</param>
         public CsfFile(CsfFile csf)
         {
+            if (csf == null)
+            {
+                throw new ArgumentNullException(nameof(csf));
+            }
+
             this.Version = csf.Version;
             this.Language = csf.Language;
             this.Options = csf.Options;
@@ -121,6 +126,15 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="options">The CsfFileOptions.</param>
         public static CsfFile LoadFromCsfFile(Stream stream, CsfFileOptions options)
         {
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             var csf = new CsfFile(options);
             using (var br = new BinaryReader(stream, Encoding.ASCII)) // the file has multiple encoding, but ASCII is here used to use BinaryReader.ReadChars()
             {
@@ -301,16 +315,18 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="labelName">The name of a label to be checked.</param>
         /// <returns>Whether the name is valid or not.</returns>
         public static Boolean ValidateLabelName(String labelName) =>
-            // is an ASCII string
-            // do not contains tabs and line breaks
-            // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
-            !labelName.ToCharArray().Any(c => (c < 32 || c >= 127));
+        // is an ASCII string
+        // do not contains tabs and line breaks
+        // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
+            !string.IsNullOrEmpty(labelName) && !labelName.ToCharArray().Any(c => (c < 32 || c >= 127));
         /// <summary>
         /// As RA2 is case insensitive about the label name, the library will converts all label names to lowercase.
         /// </summary>
-        /// <param name="labelName"></param>
+        /// <param name="labelName">The label name to be converted.</param>
         /// <returns></returns>
-        public static String LowercaseLabelName(String labelName) => labelName.ToLowerInvariant();
+#pragma warning disable CA1308 // Ignore this warning as the string here is an ASCII string
+        public static String LowercaseLabelName(String labelName) => labelName?.ToLowerInvariant();
+#pragma warning restore CA1308
         /// <summary>
         /// Load an existing ini file that represent the stringtable.
         /// </summary>
