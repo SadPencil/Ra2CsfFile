@@ -13,13 +13,13 @@ csf.AddLabel(CsfFile.LowercaseLabelName("GUI:Test-Label-3"), "Invoke CsfFile.Low
 
 // Write as a csf file
 string csfFilename = "example.csf";
-using (FileStream fs = File.OpenWrite(csfFilename))
+using (FileStream fs = File.Open(csfFilename, FileMode.Create))
 {
     csf.WriteCsfFile(fs);
 }
 
 // Load csf file
-using (FileStream fs = File.OpenRead(csfFilename))
+using (FileStream fs = File.Open(csfFilename, FileMode.Open))
 {
     csf = CsfFile.LoadFromCsfFile(fs);
 }
@@ -28,13 +28,13 @@ Console.WriteLine($"This csf file has {csf.Labels.Count} labels. The language is
 
 // Save as an ini file
 string iniFilename = "example.ini";
-using (FileStream fs = File.OpenWrite(iniFilename))
+using (FileStream fs = File.Open(iniFilename, FileMode.Create))
 {
     CsfFileIniHelper.WriteIniFile(csf, fs);
 }
 
 // Load ini file
-using (FileStream fs = File.OpenRead(iniFilename))
+using (FileStream fs = File.Open(iniFilename, FileMode.Open))
 {
     csf = CsfFileIniHelper.LoadFromIniFile(fs);
 }
