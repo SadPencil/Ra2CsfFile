@@ -146,7 +146,7 @@ namespace SadPencil.Ra2CsfFile
             return csf;
         }
 
-        private static String GetIniLabelValueKeyName(Int32 lineIndex) => "Value" + ((lineIndex == 1) ? String.Empty : $"Line{lineIndex}");
+        private static String GetIniLabelValueKeyName(Int32 lineIndex) => "Value" + ((lineIndex == 1) ? String.Empty : $"Line{lineIndex.ToString(CultureInfo.InvariantCulture)}");
 
         /// <summary>
         /// Write an ini file that represent the stringtable.
