@@ -20,7 +20,7 @@ Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 v2.1.2: disable Encoding1252WriteWorkaround by default; add CLSCompliant attribute to namespace SadPencil.Ra2CsfFile
 v2.1.1: fix that some label names are not loaded successfully from .ini files
 v2.1.0: api breaking change: change the behavior of Csf.AddLabel() with Add&Replace, so that the original ra2.csf file can be loaded
-v2.0.2: remove the space around the "=" sign of ini file to fix a bug proceeding with values contains " = " pattern
+v2.0.2: remove the space around the "=" sign of ini file to fix a bug processing values contains " = " pattern
 v2.0.1: fix a bug that CSF file with non-lowercase label name can not be loaded
 v2.0.0: migrate to .NET Standard 2.0; replace dependency MadMilkman.Ini with ini-parser-netstandard; add Csf.RemoveLabel() method.
 v1.3.1: api breaking change: Labels.Add will be replaced with AddLabel; add encoding 1252 workaround options for the original RA2 fonts; add clone constructor for CsfFile. 
