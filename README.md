@@ -17,6 +17,7 @@ Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 ## Version History
 
 ```
+v2.1.3: handle invalid CSF values with extra zeros
 v2.1.2: disable Encoding1252WriteWorkaround by default; add CLSCompliant attribute to namespace SadPencil.Ra2CsfFile
 v2.1.1: fix that some label names are not loaded successfully from .ini files
 v2.1.0: api breaking change: change the behavior of Csf.AddLabel() with Add&Replace, so that the original ra2.csf file can be loaded
