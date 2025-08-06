@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -117,6 +118,29 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a stringtable file (.csf).</param>
         public static CsfFile LoadFromCsfFile(Stream stream) => LoadFromCsfFile(stream, new CsfFileOptions());
 
+        private static byte[] TruncateUtf16BytesAtDoubleZero(byte[] inputBytes)
+        {
+            if (inputBytes == null)
+            {
+                throw new ArgumentNullException(nameof(inputBytes));
+            }
+
+            // Process two bytes at a time
+            for (int i = 0; i < inputBytes.Length - 1; i += 2)
+            {
+                // Check for 0x00, 0x00
+                if (inputBytes[i] == 0x00 && inputBytes[i + 1] == 0x00)
+                {
+                    // Create new array up to this point (excluding the 0x00, 0x00)
+                    byte[] result = new byte[i];
+                    Array.Copy(inputBytes, 0, result, 0, i);
+                    return result;
+                }
+            }
+
+            return inputBytes;
+        }
+
         /// <summary>
         /// Load an existing stringtable file (.csf).<br/>
         /// <br/>
@@ -212,7 +236,13 @@ namespace SadPencil.Ra2CsfFile
 
                         Int32 valueLength = br.ReadInt32();
                         Byte[] value = br.ReadBytes(valueLength * 2);
-                        value = value.Select(v => (Byte)(~v)).ToArray(); // perform bitwise NOT to the bytes
+
+                        // If the byte array ends with (0x00, 0x00), delete the suffix
+                        value = TruncateUtf16BytesAtDoubleZero(value);
+
+                        // perform bitwise NOT to the bytes
+                        value = value.Select(v => (Byte)(~v)).ToArray();
+
                         String valueStr;
                         try
                         {
@@ -226,6 +256,8 @@ namespace SadPencil.Ra2CsfFile
                         {
                             throw new Exception($"Invalid label value string at position {stream.Position}." + ex.Message);
                         }
+
+                        Debug.Assert(!valueStr.Contains('\uFFFE') && !valueStr.Contains('\uFFFF'), $"The CSF value contains invalid characters. ${valueStr}");
 
                         if (labelHasExtraValue)
                         {
