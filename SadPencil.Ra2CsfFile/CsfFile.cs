@@ -181,12 +181,12 @@ namespace SadPencil.Ra2CsfFile
                     }
                     catch (Exception)
                     {
-                        throw new Exception($"Invalid label name at position { stream.Position}.");
+                        throw new Exception($"Invalid label name at position {stream.Position}.");
                     }
 
                     if (!ValidateLabelName(labelNameStr))
                     {
-                        throw new Exception($"Invalid characters found in label name \"{labelNameStr}\" at position { stream.Position}.");
+                        throw new Exception($"Invalid characters found in label name \"{labelNameStr}\" at position {stream.Position}.");
                     }
 
                     // read values
@@ -207,7 +207,7 @@ namespace SadPencil.Ra2CsfFile
                         }
                         else
                         {
-                            throw new Exception($"Invalid label value type at position { stream.Position}.");
+                            throw new Exception($"Invalid label value type at position {stream.Position}.");
                         }
 
                         Int32 valueLength = br.ReadInt32();
@@ -224,7 +224,7 @@ namespace SadPencil.Ra2CsfFile
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Invalid label value string at position { stream.Position}." + ex.Message);
+                            throw new Exception($"Invalid label value string at position {stream.Position}." + ex.Message);
                         }
 
                         if (labelHasExtraValue)
