@@ -6,10 +6,9 @@ CsfFile csf = new CsfFile();
 
 // Edit labels.
 csf.AddLabel("gui:test-label-1", "This is the first line.\nThis is the second line =-;#!");
-csf.AddLabel("gui:test-label-2", "Hi there!");
-Console.WriteLine(csf.Labels["gui:test-label-2"]);
-csf.RemoveLabel("gui:test-label-2");
-csf.AddLabel(CsfFile.LowercaseLabelName("GUI:Test-Label-3"), "Invoke CsfFile.LowercaseLabelName() as the label name is case-insensitive.");
+csf.AddLabel("GUI:Test-Label-2", "Hi there!");
+Console.WriteLine(csf.Labels["GUI:Test-Label-2"]);
+csf.RemoveLabel("GUI:Test-Label-2");
 
 // Write as a csf file
 string csfFilename = "example.csf";

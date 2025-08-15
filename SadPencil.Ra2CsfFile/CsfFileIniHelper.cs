@@ -137,7 +137,6 @@ namespace SadPencil.Ra2CsfFile
                 if (valueSplited.Count != 0)
                 {
                     String labelValue = String.Join(CsfFile.LineBreakCharacters, valueSplited);
-                    labelName = CsfFile.LowercaseLabelName(labelName);
                     _ = csf.AddLabel(labelName, labelValue);
                 }
 

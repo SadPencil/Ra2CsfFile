@@ -20,7 +20,7 @@ namespace SadPencil.Ra2CsfFile
         /// </summary>
         public CsfFileOptions Options { get; set; } = new CsfFileOptions();
 
-        private readonly Dictionary<String, String> _labels = new Dictionary<String, String>();
+        private readonly Dictionary<String, String> _labels = new Dictionary<String, String>(StringComparer.InvariantCultureIgnoreCase);
         /// <summary>
         /// The labels of this file. Each label has a name, and a string, which are the dictionary keys and values.        
         /// </summary>
@@ -43,10 +43,10 @@ namespace SadPencil.Ra2CsfFile
         /// </summary>
         public Int32 Version { get; set; } = 3;
         /// <summary>
-        /// Add or replace a label to the string table. The label name will be checked. The label name must be lowercase. <br/>
+        /// Add or replace a label to the string table. The label name will be checked. <br/>
         /// If the label value contains multiple lines, use LineBreakCharacters to separate the line.
         /// </summary>
-        /// <param name="labelName">The label name. Must be lowercase.</param>
+        /// <param name="labelName">The label name.</param>
         /// <param name="labelValue">The label value.</param>
         /// <returns>True if an existing element is found and replaced.</returns>
         public Boolean AddLabel(String labelName, String labelValue)
@@ -54,10 +54,6 @@ namespace SadPencil.Ra2CsfFile
             if (!ValidateLabelName(labelName))
             {
                 throw new Exception("Invalid characters found in label name.");
-            }
-            if (labelName != LowercaseLabelName(labelName))
-            {
-                throw new Exception("As the label name is case-insensitive, the label name should be in lower case. Use Csf.LowercaseLabelName() to convert.");
             }
             if (this.Labels.ContainsKey(labelName))
             {
@@ -200,7 +196,6 @@ namespace SadPencil.Ra2CsfFile
                     try
                     {
                         labelNameStr = Encoding.ASCII.GetString(labelName);
-                        labelNameStr = LowercaseLabelName(labelNameStr);
                     }
                     catch (Exception)
                     {
@@ -351,14 +346,7 @@ namespace SadPencil.Ra2CsfFile
         // do not contains tabs and line breaks
         // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
             !string.IsNullOrEmpty(labelName) && !labelName.ToCharArray().Any(c => (c < 32 || c >= 127));
-        /// <summary>
-        /// As RA2 is case insensitive about the label name, the library will converts all label names to lowercase.
-        /// </summary>
-        /// <param name="labelName">The label name to be converted.</param>
-        /// <returns></returns>
-#pragma warning disable CA1308 // Ignore this warning as the string here is an ASCII string
-        public static String LowercaseLabelName(String labelName) => labelName?.ToLowerInvariant();
-#pragma warning restore CA1308
+
         /// <summary>
         /// Load an existing ini file that represent the stringtable.
         /// </summary>
