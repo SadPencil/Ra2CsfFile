@@ -11,7 +11,7 @@ namespace SadPencil.Ra2CsfFile
     /// <summary>
     /// This class reads and writes the stringtable file (.csf) that is used by RA2/YR. <br/>
     /// </summary>
-    public class CsfFile : ICloneable
+    public class CsfFile : ICloneable, IEquatable<CsfFile>
     {
         // https://modenc.renegadeprojects.com/CSF_File_Format
 
@@ -360,6 +360,68 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a new ini file.</param>
         [Obsolete("Please use CsfFileIniHelper.WriteIniFile() instead.")]
         public void WriteIniFile(Stream stream) => CsfFileIniHelper.WriteIniFile(this, stream);
+
+        public Boolean Equals(CsfFile other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            Boolean result = true;
+            result &= this.Language == other.Language && this.Version == other.Version && this.Options.Equals(other.Options);
+            result &= this.Labels.Count == other.Labels.Count;
+            if (!result)
+            {
+                return false;
+            }
+
+            foreach (string label in this.Labels.Keys)
+            {
+                if (!other.Labels.ContainsKey(label) || !this.Labels[label].Equals(other.Labels[label], StringComparison.InvariantCulture))
+                {
+                    Debug.WriteLine($"CSF files do not equal. Label: {label}.");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return new
+            {
+                this.Language,
+                this.Version,
+                this.Options,
+                this.Labels,
+            }.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is CsfFile)
+            {
+                return Equals((CsfFile)obj);
+            }
+
+            return base.Equals(obj);
+        }
+
+        public static bool operator ==(CsfFile left, CsfFile right)
+        {
+            if (left is null)
+            {
+                return right is null;
+            }
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CsfFile left, CsfFile right)
+        {
+            return !(left == right);
+        }
 
     }
 }
