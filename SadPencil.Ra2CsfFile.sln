@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SadPencil.Ra2CsfFile.Test", "SadPencil.Ra2CsfFile.Test\SadPencil.Ra2CsfFile.Test.csproj", "{CA450F2B-530E-4C5C-9651-D13B6A2580E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1A84AAF9-F31F-407A-A3C4-E83CB62DA539}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A84AAF9-F31F-407A-A3C4-E83CB62DA539}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A84AAF9-F31F-407A-A3C4-E83CB62DA539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA450F2B-530E-4C5C-9651-D13B6A2580E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA450F2B-530E-4C5C-9651-D13B6A2580E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA450F2B-530E-4C5C-9651-D13B6A2580E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA450F2B-530E-4C5C-9651-D13B6A2580E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

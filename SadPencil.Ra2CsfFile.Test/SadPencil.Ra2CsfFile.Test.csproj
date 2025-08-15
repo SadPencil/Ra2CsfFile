@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <TestProjectType>UnitTest</TestProjectType>
+    <AssemblyTitle>SadPencil.Ra2CsfFile.Test</AssemblyTitle>
+    <Product>SadPencil.Ra2CsfFile.Test</Product>
+    <Copyright>Copyright © SadPencil 2025</Copyright>
+    <LangVersion>12</LangVersion>
+	  <IsPackable>false</IsPackable>
+	  <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestAdapter" Version="3.10.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.10.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SadPencil.Ra2CsfFile\SadPencil.Ra2CsfFile.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Resources\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
