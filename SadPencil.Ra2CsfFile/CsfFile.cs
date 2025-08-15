@@ -106,7 +106,6 @@ namespace SadPencil.Ra2CsfFile
             this._labels = new Dictionary<String, String>(csf._labels);
         }
 
-#pragma warning disable CS1591 // 缺少对公共可见类型或成员“CsfFile.Clone()”的 XML 注释
         public Object Clone() => new CsfFile(this);
 
         /// <summary>
