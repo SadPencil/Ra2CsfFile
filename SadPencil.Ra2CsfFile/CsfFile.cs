@@ -99,7 +99,7 @@ namespace SadPencil.Ra2CsfFile
             this.Version = csf.Version;
             this.Language = csf.Language;
             this.Options = csf.Options;
-            this._labels = new Dictionary<String, String>(csf._labels);
+            this._labels = new Dictionary<String, String>(csf._labels, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public Object Clone() => new CsfFile(this);
