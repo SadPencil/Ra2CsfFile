@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,41 +8,47 @@ namespace SadPencil.Ra2CsfFile.Test
     [TestClass]
     public class Ra2CsfFileTest
     {
-        private static string TrimMultiline(string input, string linebreak = "\n") => string.Join(linebreak, input.Split([linebreak], StringSplitOptions.None).Select(l => l.Trim()));
+        private static String TrimMultiline(String input, String linebreak = "\n") => String.Join(linebreak, input.Split([linebreak], StringSplitOptions.None).Select(l => l.Trim()));
 
-        private void TestCsfFile(string csfFilename)
+        private void TestCsfFile(String csfFilename)
         {
             CsfFile inputCsfFile;
 
             // Load csf file
-            using (FileStream fs = File.Open(csfFilename, FileMode.Open))
+            using (var fs = File.Open(csfFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 inputCsfFile = CsfFile.LoadFromCsfFile(fs);
             }
+
+            this.TestCsfFile(inputCsfFile);
+        }
+
+        private void TestCsfFile(CsfFile inputCsfFile)
+        {
 
             // Convert to ini file
             MemoryStream iniMemoryStream;
             {
                 MemoryStream _iniMemoryStream = new();
                 CsfFileIniHelper.WriteIniFile(inputCsfFile, _iniMemoryStream);
-                byte[] iniBytes = _iniMemoryStream.ToArray();
+                Byte[] iniBytes = _iniMemoryStream.ToArray();
                 iniMemoryStream = new MemoryStream(iniBytes);
             }
 
             // Read ini file
-            CsfFile iniCsfFile = CsfFileIniHelper.LoadFromIniFile(iniMemoryStream);
+            var iniCsfFile = CsfFileIniHelper.LoadFromIniFile(iniMemoryStream);
 
             // KNOWN ISSUES
             // Some CSF labels have space characters as prefix or suffix. The ini format can't support representing such a trimmable line right now.
-            List<string> keysCopy = inputCsfFile.Labels.Keys.ToList();
-            foreach (string label in keysCopy)
+            var keysCopy = inputCsfFile.Labels.Keys.ToList();
+            foreach (String label in keysCopy)
             {
-                string value = inputCsfFile.Labels[label];
-                string trimmedValue = TrimMultiline(value);
+                String value = inputCsfFile.Labels[label];
+                String trimmedValue = TrimMultiline(value);
                 if (!value.Equals(trimmedValue, StringComparison.InvariantCulture))
                 {
                     Console.WriteLine($"Trim CSF label {label}");
-                    bool existed = inputCsfFile.AddLabel(label, trimmedValue);
+                    Boolean existed = inputCsfFile.AddLabel(label, trimmedValue);
                     Assert.IsTrue(existed);
                 }
 
@@ -58,10 +63,26 @@ namespace SadPencil.Ra2CsfFile.Test
         [TestMethod]
         public void TestStringTables()
         {
-            string[] files = Directory.GetFiles("Resources", "*.csf", SearchOption.AllDirectories);
-            foreach (string file in files)
+            String[] files = Directory.GetFiles("Resources/Stringtables", "*.csf", SearchOption.AllDirectories);
+            foreach (String file in files)
             {
-                TestCsfFile(file);
+                this.TestCsfFile(file);
+            }
+        }
+
+        [TestMethod]
+        public void TestCaseInsensitive()
+        {
+            String[] iniFiles = Directory.GetFiles("Resources/CaseInsensitiveTest", "*.ini", SearchOption.AllDirectories);
+            foreach (String iniFilename in iniFiles)
+            {
+                CsfFile csfFile;
+                using (Stream stream = File.Open(iniFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    csfFile = CsfFileIniHelper.LoadFromIniFile(stream);
+                }
+
+                this.TestCsfFile(csfFile);
             }
         }
     }
