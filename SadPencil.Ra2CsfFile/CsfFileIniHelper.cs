@@ -23,7 +23,19 @@ namespace SadPencil.Ra2CsfFile
         private const String INI_FILE_HEADER_CSF_LANGUAGE_KEY = "CsfLang";
 
         private const Int32 INI_VERSION = 2;
-        private static IniParserConfiguration IniParserConfiguration { get; } = new IniParserConfiguration()
+
+        private static IniParserConfiguration IniParserReadConfiguration { get; } = new IniParserConfiguration()
+        {
+            AllowDuplicateKeys = true,
+            AllowDuplicateSections = true,
+            AllowKeysWithoutSection = false,
+            CommentRegex = new System.Text.RegularExpressions.Regex("a^"), // match nothing
+            CaseInsensitive = true,
+            AssigmentSpacer = String.Empty,
+            SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
+        };
+
+        private static IniParserConfiguration IniParserWriteConfiguration { get; } = new IniParserConfiguration()
         {
             AllowDuplicateKeys = false,
             AllowDuplicateSections = false,
@@ -34,9 +46,7 @@ namespace SadPencil.Ra2CsfFile
             SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
         };
 
-        private static IniData GetIniData() => new IniData() { Configuration = IniParserConfiguration, };
-
-        private static IniDataParser GetIniDataParser() => new IniDataParser(IniParserConfiguration);
+        private static IniDataParser GetIniDataParser() => new IniDataParser(IniParserReadConfiguration);
 
         private static IniData ParseIni(Stream stream)
         {
@@ -163,7 +173,7 @@ namespace SadPencil.Ra2CsfFile
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            var ini = GetIniData();
+            var ini = new IniData() { Configuration = IniParserWriteConfiguration };
 
             // write headers
             _ = ini.Sections.AddSection(INI_FILE_HEADER_SECTION_NAME);
