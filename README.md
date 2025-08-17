@@ -17,6 +17,7 @@ Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 ## Version History
 
 ```
+v2.2.1: fix a bug where labels were not case-insensitive after cloning
 v2.2.0: allow CSF labels with capitcal letters included
 v2.1.3: handle invalid CSF values with extra zeros
 v2.1.2: disable Encoding1252WriteWorkaround by default; add CLSCompliant attribute to namespace SadPencil.Ra2CsfFile
