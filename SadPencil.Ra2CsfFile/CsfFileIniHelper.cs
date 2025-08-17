@@ -104,7 +104,7 @@ namespace SadPencil.Ra2CsfFile
             csf.Language = CsfLangHelper.GetCsfLang(Convert.ToInt32(csfLang, CultureInfo.InvariantCulture));
 
             // load all labels
-            var labelSections = new Dictionary<String, KeyDataCollection>();
+            var labelSections = new Dictionary<String, KeyDataCollection>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var (k, v) in ini.Sections.Where(section => section.SectionName != INI_FILE_HEADER_SECTION_NAME)
                 .Select(section => (section.SectionName, ini.Sections[section.SectionName])))
             {
