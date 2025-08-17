@@ -8,7 +8,7 @@
     <FileVersion>2.2.1</FileVersion>
     <PackageProjectUrl>https://github.com/SadPencil/Ra2CsfFile</PackageProjectUrl>
     <Description>Load, edit, and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.</Description>
-    <Copyright>Copyright © Sad Pencil 2021</Copyright>
+    <Copyright>Copyright © SadPencil 2021-2025</Copyright>
     <RepositoryUrl>https://github.com/SadPencil/Ra2CsfFile</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>CSF Westwood Red-Alert-2 RA2</PackageTags>
