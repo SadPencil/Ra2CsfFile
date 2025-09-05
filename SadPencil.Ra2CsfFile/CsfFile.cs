@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -102,9 +102,12 @@ namespace SadPencil.Ra2CsfFile
             this._labels = new Dictionary<String, String>(csf._labels, StringComparer.InvariantCultureIgnoreCase);
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Returns a new CsfFile object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new CsfFile object.</returns>
         public Object Clone() => new CsfFile(this);
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 
         /// <summary>
         /// Load an existing stringtable file (.csf).<br/>
