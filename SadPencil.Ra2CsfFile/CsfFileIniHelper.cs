@@ -152,6 +152,11 @@ namespace SadPencil.Ra2CsfFile
 
             }
 
+            if (options.OrderByKey)
+            {
+                csf = csf.OrderByKey();
+            }
+
             return csf;
         }
 
@@ -183,6 +188,12 @@ namespace SadPencil.Ra2CsfFile
             _ = header.AddKey(INI_FILE_HEADER_CSF_LANGUAGE_KEY, ((Int32)csf.Language).ToString(CultureInfo.InvariantCulture));
 
             // write labels
+            IEnumerable<KeyValuePair<String, String>> csfLabels = csf.Labels;
+            if (csf.Options.OrderByKey)
+            {
+                csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key);
+            }
+
             foreach (var labelNameValues in csf.Labels)
             {
                 String labelName = labelNameValues.Key;

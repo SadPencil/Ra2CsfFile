@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -108,6 +108,22 @@ namespace SadPencil.Ra2CsfFile
         /// <returns>A new CsfFile object.</returns>
         public Object Clone() => new CsfFile(this);
 
+        /// <summary>
+        /// Returns a new CsfFile object with labels ordered by keys.
+        /// </summary>
+        /// <returns>A new CsfFile object.</returns>
+        public CsfFile OrderByKey()
+        {
+            var csf = new CsfFile() { Version = this.Version, Language = this.Language, Options = this.Options };
+
+            List<string> labelKeys = this.Labels.Keys.OrderBy(k => k).ToList();
+            foreach (string labelKey in labelKeys)
+            {
+                _ = csf.AddLabel(labelKey, this.Labels[labelKey]);
+            }
+
+            return csf;
+        }
 
         /// <summary>
         /// Load an existing stringtable file (.csf).<br/>
@@ -278,6 +294,12 @@ namespace SadPencil.Ra2CsfFile
                     }
                 }
             }
+
+            if (options.OrderByKey)
+            {
+                csf = csf.OrderByKey();
+            }
+
             return csf;
         }
 
@@ -287,6 +309,17 @@ namespace SadPencil.Ra2CsfFile
         /// <param name="stream">The file stream of a new stringtable file (.csf).</param>
         public void WriteCsfFile(Stream stream)
         {
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            IEnumerable<KeyValuePair<String, String>> csfLabels = this.Labels;
+            if (this.Options.OrderByKey)
+            {
+                csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key);
+            }
+
             using (var bw = new BinaryWriter(stream))
             {
                 // write header
@@ -299,7 +332,7 @@ namespace SadPencil.Ra2CsfFile
                 bw.Write((Int32)0); // unused
                 bw.Write((Int32)this.Language);
                 // write labels
-                foreach (var labelNameValues in this.Labels)
+                foreach (var labelNameValues in csfLabels)
                 {
                     String labelName = labelNameValues.Key;
                     String labelValue = labelNameValues.Value;

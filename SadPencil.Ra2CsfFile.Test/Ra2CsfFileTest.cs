@@ -10,7 +10,7 @@ namespace SadPencil.Ra2CsfFile.Test
     {
         private static String TrimMultiline(String input, String linebreak = "\n") => String.Join(linebreak, input.Split([linebreak], StringSplitOptions.None).Select(l => l.Trim()));
 
-        private void TestCsfFile(String csfFilename)
+        private void TestCsfFile(String csfFilename, bool orderByKey = false)
         {
             CsfFile inputCsfFile;
 
@@ -20,10 +20,10 @@ namespace SadPencil.Ra2CsfFile.Test
                 inputCsfFile = CsfFile.LoadFromCsfFile(fs);
             }
 
-            this.TestCsfFile(inputCsfFile);
+            this.TestCsfFile(inputCsfFile, orderByKey);
         }
 
-        private void TestCsfFile(CsfFile inputCsfFile)
+        private void TestCsfFile(CsfFile inputCsfFile, bool orderByKey = false)
         {
 
             // Convert to ini file
@@ -36,7 +36,7 @@ namespace SadPencil.Ra2CsfFile.Test
             }
 
             // Read ini file
-            var iniCsfFile = CsfFileIniHelper.LoadFromIniFile(iniMemoryStream);
+            var iniCsfFile = CsfFileIniHelper.LoadFromIniFile(iniMemoryStream, new CsfFileOptions() { OrderByKey = orderByKey });
 
             // KNOWN ISSUES
             // Some CSF labels have space characters as prefix or suffix. The ini format can't support representing such a trimmable line right now.
@@ -66,7 +66,8 @@ namespace SadPencil.Ra2CsfFile.Test
             String[] files = Directory.GetFiles("Resources/Stringtables", "*.csf", SearchOption.AllDirectories);
             foreach (String file in files)
             {
-                this.TestCsfFile(file);
+                this.TestCsfFile(file, orderByKey: false);
+                this.TestCsfFile(file, orderByKey: true);
             }
         }
 

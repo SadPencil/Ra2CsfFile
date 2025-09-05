@@ -1,4 +1,4 @@
-#pragma warning disable CA1805 // Do not initialize unnecessarily
+﻿#pragma warning disable CA1805 // Do not initialize unnecessarily
 using System;
 
 namespace SadPencil.Ra2CsfFile
@@ -62,6 +62,9 @@ namespace SadPencil.Ra2CsfFile
             return !(left == right);
         }
 
+        /// <summary>
+        /// If set, the keys will be sorted in ascending order.
+        public Boolean OrderByKey { get; set; } = false;
     }
 }
 #pragma warning restore CA1805 // Do not initialize unnecessarily
