@@ -191,7 +191,7 @@ namespace SadPencil.Ra2CsfFile
             IEnumerable<KeyValuePair<String, String>> csfLabels = csf.Labels;
             if (csf.Options.OrderByKey)
             {
-                csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key, StringComparer.InvariantCultureIgnoreCase);
+                csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key, NaturalStringComparer.InvariantCultureIgnoreCase);
             }
 
             foreach (var labelNameValues in csf.Labels)

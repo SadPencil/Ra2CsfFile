@@ -16,13 +16,14 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <Version>2.2.2</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>add OrderByKey option</PackageReleaseNotes>
+    <PackageReleaseNotes>ignore case when sorting keys; using natural sort order to make sure "key10" is placed after "key9"</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Warning: there are no source codes, changelogs, or author's confirmation on version 2.5.3. Avoid upgrading to version 2.5.3! -->
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
+    <PackageReference Include="NaturalStringExtensions" Version="3.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
   </ItemGroup>
