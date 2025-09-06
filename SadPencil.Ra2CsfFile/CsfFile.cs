@@ -116,7 +116,7 @@ namespace SadPencil.Ra2CsfFile
         {
             var csf = new CsfFile() { Version = this.Version, Language = this.Language, Options = this.Options };
 
-            List<string> labelKeys = this.Labels.Keys.OrderBy(k => k).ToList();
+            List<string> labelKeys = this.Labels.Keys.OrderBy(k => k, StringComparer.InvariantCultureIgnoreCase).ToList();
             foreach (string labelKey in labelKeys)
             {
                 _ = csf.AddLabel(labelKey, this.Labels[labelKey]);
@@ -317,7 +317,7 @@ namespace SadPencil.Ra2CsfFile
             IEnumerable<KeyValuePair<String, String>> csfLabels = this.Labels;
             if (this.Options.OrderByKey)
             {
-                csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key);
+                csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key, StringComparer.InvariantCultureIgnoreCase);
             }
 
             using (var bw = new BinaryWriter(stream))
