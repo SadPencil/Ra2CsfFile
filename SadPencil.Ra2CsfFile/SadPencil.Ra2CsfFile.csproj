@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>sadpencil</Authors>
-    <AssemblyVersion>2.2.2</AssemblyVersion>
-    <FileVersion>2.2.2</FileVersion>
+    <AssemblyVersion>2.2.3</AssemblyVersion>
+    <FileVersion>2.2.3</FileVersion>
     <PackageProjectUrl>https://github.com/SadPencil/Ra2CsfFile</PackageProjectUrl>
     <Description>Load, edit, and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.</Description>
     <Copyright>Copyright © SadPencil 2021-2025</Copyright>
@@ -14,9 +14,9 @@
     <PackageTags>CSF Westwood Red-Alert-2 RA2</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
-    <Version>2.2.2</Version>
+    <Version>2.2.3</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>ignore case when sorting keys; using natural sort order to make sure "key10" is placed after "key9"</PackageReleaseNotes>
+    <PackageReleaseNotes>ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
