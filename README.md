@@ -17,6 +17,7 @@ Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 ## Version History
 
 ```
+v2.2.4: add trimmable line warning comment when generating an ini file
 v2.2.3: ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"
 v2.2.2: add OrderByKey option
 v2.2.1: fix a bug where labels were not case-insensitive after cloning; support case-insensitive labels in INI
