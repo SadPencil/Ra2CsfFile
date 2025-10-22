@@ -8,8 +8,6 @@ namespace SadPencil.Ra2CsfFile.Test
     [TestClass]
     public class Ra2CsfFileTest
     {
-        private static String TrimMultiline(String input, String linebreak = "\n") => String.Join(linebreak, input.Split([linebreak], StringSplitOptions.None).Select(l => l.Trim()));
-
         private void TestCsfFile(String csfFilename, bool orderByKey = false)
         {
             CsfFile inputCsfFile;
@@ -44,7 +42,7 @@ namespace SadPencil.Ra2CsfFile.Test
             foreach (String label in keysCopy)
             {
                 String value = inputCsfFile.Labels[label];
-                String trimmedValue = TrimMultiline(value);
+                String trimmedValue = CsfFileIniHelper.TrimMultiLine(value);
                 if (!value.Equals(trimmedValue, StringComparison.InvariantCulture))
                 {
                     Console.WriteLine($"Trim CSF label {label}");
