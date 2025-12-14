@@ -57,7 +57,9 @@ namespace SadPencil.Ra2CsfFile
             }
             if (this.Labels.ContainsKey(labelName))
             {
-                this._labels[labelName] = labelValue;
+                // because we have specified StringComparer.InvariantCultureIgnoreCase, we need to update the casing of the key.
+                _ = this._labels.Remove(labelName);
+                this._labels.Add(labelName, labelValue);
                 return true;
             }
             else
