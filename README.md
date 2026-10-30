@@ -7,6 +7,12 @@ This is a .NET Standard 2.0 Library to load, edit, and save string table files (
 
 See `ExampleApp/Program.cs` file.
 
+## Command-line converter
+
+The `Ra2CsfFileCLI` project in this repository is a .NET 8 command-line converter for the `.csf` and `.ini` string-table formats supported by this library. It supports both conversion directions and defaults to the most conservative Windows-1252 workaround settings for existing game and mod files.
+
+See [`Ra2CsfFileCLI/README.md`](Ra2CsfFileCLI/README.md) for build and usage instructions.
+
 ## License
 
 MIT
