@@ -82,7 +82,7 @@ internal static class Cli
             };
 
             string inputPath = input.FullName;
-            string outputPath = CsfIniConverter.ResolveOutputPath(inputPath, output, ".ini", force);
+            string outputPath = OutputFileManager.ResolvePath(inputPath, output, ".ini", force);
             ConversionSummary summary = CsfIniConverter.ConvertCsfToIni(inputPath, outputPath, options, force);
             WriteSummary(inputPath, outputPath, summary);
             return ExitSuccess;
@@ -142,7 +142,7 @@ internal static class Cli
             };
 
             string inputPath = input.FullName;
-            string outputPath = CsfIniConverter.ResolveOutputPath(inputPath, output, ".csf", force);
+            string outputPath = OutputFileManager.ResolvePath(inputPath, output, ".csf", force);
             ConversionSummary summary = CsfIniConverter.ConvertIniToCsf(inputPath, outputPath, options, force);
             WriteSummary(inputPath, outputPath, summary);
             return ExitSuccess;
