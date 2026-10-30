@@ -11,6 +11,8 @@ internal static class OutputFileManager
             ? StringComparison.OrdinalIgnoreCase
             : StringComparison.Ordinal;
 
+    private const int MaxSymbolicLinkDepth = 64;
+
     public static string ResolvePath(string inputPath, FileInfo? output, string defaultExtension, bool force)
     {
         if (Directory.Exists(inputPath))
@@ -127,18 +129,27 @@ internal static class OutputFileManager
     }
 
     /// <summary>
-    /// Resolve symlinks in the directory components and in the final file so
-    /// that different path spellings of the same input file can be detected.
+    /// Fully resolve symlinks in a path, including symlinks in the parent
+    /// components of other symlink targets. Resolution is bounded so that a
+    /// symlink cycle produces an error instead of unbounded recursion.
     /// </summary>
-    private static string ResolveFinalPath(string fullPath)
+    private static string ResolveFinalPath(string fullPath) => ResolveFinalPath(fullPath, 0);
+
+    private static string ResolveFinalPath(string fullPath, int depth)
     {
-        string? root = Path.GetPathRoot(fullPath);
-        if (string.IsNullOrEmpty(root))
+        if (depth > MaxSymbolicLinkDepth)
         {
-            return fullPath;
+            throw new CliException($"Too many levels of symbolic links while resolving \"{fullPath}\".");
         }
 
-        string[] segments = fullPath[root.Length..].Split(
+        string path = Path.GetFullPath(fullPath);
+        string? root = Path.GetPathRoot(path);
+        if (string.IsNullOrEmpty(root))
+        {
+            return path;
+        }
+
+        string[] segments = path[root.Length..].Split(
             new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
             StringSplitOptions.RemoveEmptyEntries);
 
@@ -150,37 +161,30 @@ internal static class OutputFileManager
         string resolvedDirectory = root;
         for (int i = 0; i < segments.Length - 1; i++)
         {
-            resolvedDirectory = ResolveDirectoryLink(Path.Combine(resolvedDirectory, segments[i]));
+            resolvedDirectory = ResolveLinkIfAny(Path.Combine(resolvedDirectory, segments[i]), depth);
         }
 
         string resolvedPath = Path.Combine(resolvedDirectory, segments[^1]);
-        if (File.Exists(resolvedPath))
-        {
-            resolvedPath = ResolveFileLink(resolvedPath);
-        }
-
-        return Path.GetFullPath(resolvedPath);
+        return Path.GetFullPath(ResolveLinkIfAny(resolvedPath, depth));
     }
 
-    private static string ResolveDirectoryLink(string path)
+    private static string ResolveLinkIfAny(string path, int depth)
     {
-        var directory = new DirectoryInfo(path);
-        if (directory.Exists)
+        FileSystemInfo? target;
+        if (Directory.Exists(path))
         {
-            FileSystemInfo? target = directory.ResolveLinkTarget(returnFinalTarget: true);
-            if (target is not null)
-            {
-                return target.FullName;
-            }
+            target = new DirectoryInfo(path).ResolveLinkTarget(returnFinalTarget: false);
+        }
+        else if (File.Exists(path))
+        {
+            target = new FileInfo(path).ResolveLinkTarget(returnFinalTarget: false);
+        }
+        else
+        {
+            return path;
         }
 
-        return path;
-    }
-
-    private static string ResolveFileLink(string path)
-    {
-        FileSystemInfo? target = new FileInfo(path).ResolveLinkTarget(returnFinalTarget: true);
-        return target is not null ? target.FullName : path;
+        return target is not null ? ResolveFinalPath(target.FullName, depth + 1) : path;
     }
 
     private static void TryDelete(string path)
