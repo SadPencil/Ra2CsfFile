@@ -1,5 +1,5 @@
-using System.CommandLine;
 using SadPencil.Ra2CsfFile;
+using System.CommandLine;
 
 namespace Ra2CsfFileCLI;
 
