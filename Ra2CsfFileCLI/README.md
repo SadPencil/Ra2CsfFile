@@ -1,6 +1,6 @@
 # Ra2CsfFileCLI
 
-`Ra2CsfFileCLI` is a .NET 8 command-line converter for Red Alert 2 string tables. It converts SadPencil.Ra2CsfFile `.ini` files to `.csf` files and back, using the `SadPencil.Ra2CsfFile` library in this repository.
+`Ra2CsfFileCLI` is a command-line converter for Red Alert 2 string tables. It converts SadPencil.Ra2CsfFile `.ini` files to `.csf` files and back, using the `SadPencil.Ra2CsfFile` library in this repository.
 
 ## Requirements
 
