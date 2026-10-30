@@ -42,7 +42,7 @@ The default output is the input path with the other extension in the same direct
 
 - **Windows-1252 workarounds: both enabled.** Code points 0x80-0x9F are treated as Windows-1252 when reading a `.csf` and converted back to those code points when writing a `.csf`. This is the most conservative setting for existing game and mod files, because it preserves the legacy mapping used by the original `game.fnt`. Use `--no-1252-read` or `--no-1252-write` to opt out for one direction.
 - **Label order:** the input order is preserved. Use `--order-by-key` to sort labels with the library's natural, case-insensitive comparison.
-- **Output files:** an existing output file is not overwritten unless `--force` is specified. Without `--force`, the destination is created exclusively, so concurrent conversions cannot silently overwrite each other. With `--force`, the output directory entry is replaced through a temporary file; links are not followed, so a hard-linked input file is not truncated. Output paths that resolve to the input file by path (for example, a symlink to the input) are refused.
+- **Output files:** an existing output file is not overwritten unless `--force` is specified. Without `--force`, the destination is created exclusively, so concurrent conversions cannot silently overwrite each other.
 - **Encoding:** generated `.ini` files are UTF-8 without BOM. The generated `.csf` reuses the `CsfVersion` and `CsfLang` values from the `.ini` header.
 - **Exit codes:** 0 on success, 1 on parse, validation, conversion, or I/O errors.
 
