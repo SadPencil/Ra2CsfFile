@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Official VS Code C# Dev Kit Extension exclusion
+*.lscache
+
+# macOS
+.DS_Store
