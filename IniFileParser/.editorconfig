@@ -1,0 +1,29 @@
+# The code in this folder is vendored from ini-parser (MIT License, see LICENSE).
+# Keep it as close to upstream as possible, so instead of fixing the imported sources the
+# analyzer rules of this repository are disabled for this folder.
+
+[*.cs]
+dotnet_analyzer_diagnostic.severity = none
+
+# Explicit settings, because a specific rule setting always wins over the bulk one above.
+dotnet_diagnostic.CA1002.severity = none
+dotnet_diagnostic.CA1031.severity = none
+dotnet_diagnostic.CA1032.severity = none
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1200.severity = none
+dotnet_diagnostic.CA1304.severity = none
+dotnet_diagnostic.CA1305.severity = none
+dotnet_diagnostic.CA1307.severity = none
+dotnet_diagnostic.CA1309.severity = none
+dotnet_diagnostic.CA1310.severity = none
+dotnet_diagnostic.CA1507.severity = none
+dotnet_diagnostic.CA1508.severity = none
+dotnet_diagnostic.CA1514.severity = none
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1820.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1854.severity = none
+dotnet_diagnostic.CA1861.severity = none
+dotnet_diagnostic.CA1874.severity = none
+dotnet_diagnostic.CA2201.severity = none
+dotnet_diagnostic.CA2227.severity = none

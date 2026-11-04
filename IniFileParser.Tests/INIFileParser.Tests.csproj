@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Tests and fixtures from rickyah/ini-parser master at
+    c4dbf0eed984b0d57841bd6288040a2d5250e66e (2.5.2, MIT, see ../IniFileParser/LICENSE).
+    Keep the upstream NUnit 2 tests unchanged; only migrate the project and fixture layout.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>IniFileParser.Tests</RootNamespace>
+    <AssemblyName>IniFileParser.Tests</AssemblyName>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="NUnit" Version="2.6.3" />
+    <PackageReference Include="NUnitTestAdapter" Version="2.3.0" />
+    <ProjectReference Include="..\IniFileParser\INIFileParser.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <LegacyTestFixture Include="*.ini;*.cfg" />
+    <None Update="*.ini;*.cfg" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Some upstream tests open ../../*.ini. Stage fixtures there as well so the
+       tests keep their original paths and write only under bin, not into source files. -->
+  <Target Name="CopyLegacyTestFixtures" AfterTargets="Build">
+    <Copy SourceFiles="@(LegacyTestFixture)" DestinationFolder="$(TargetDir)..\..\" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

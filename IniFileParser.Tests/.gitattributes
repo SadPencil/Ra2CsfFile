@@ -1,0 +1,2 @@
+# Verbatim expected strings in these net48 tests use Windows line endings.
+*.cs text eol=crlf

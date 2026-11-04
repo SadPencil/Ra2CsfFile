@@ -1,0 +1,6 @@
+# Preserve the imported upstream tests instead of applying this repository's style rules.
+root = true
+
+[*.cs]
+end_of_line = crlf
+dotnet_analyzer_diagnostic.severity = none

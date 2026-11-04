@@ -5,6 +5,8 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="ExampleApp/ExampleApp.csproj" />
+  <Project Path="IniFileParser.Tests/INIFileParser.Tests.csproj" />
+  <Project Path="IniFileParser/INIFileParser.csproj" />
   <Project Path="SadPencil.Ra2CsfFile.Test/SadPencil.Ra2CsfFile.Test.csproj" />
   <Project Path="SadPencil.Ra2CsfFile/SadPencil.Ra2CsfFile.csproj" />
 </Solution>
