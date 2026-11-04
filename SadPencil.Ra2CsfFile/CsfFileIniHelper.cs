@@ -24,7 +24,7 @@ namespace SadPencil.Ra2CsfFile
 
         private const Int32 INI_VERSION = 2;
 
-        private static IniParserConfiguration IniParserReadConfiguration { get; } = new IniParserConfiguration()
+        private static IniParserConfiguration GetIniParserReadConfiguration(CsfFileOptions options) => new IniParserConfiguration()
         {
             AllowDuplicateKeys = true,
             AllowDuplicateSections = true,
@@ -32,6 +32,9 @@ namespace SadPencil.Ra2CsfFile
             CommentRegex = new System.Text.RegularExpressions.Regex("a^"), // match nothing
             CaseInsensitive = true,
             AssigmentSpacer = String.Empty,
+            // When PreserveIniValueWhitespace is enabled, the leading and the trailing whitespace
+            // characters of every value line are kept instead of being trimmed.
+            TrimProperties = !options.PreserveIniValueWhitespace,
             SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
         };
 
@@ -46,11 +49,11 @@ namespace SadPencil.Ra2CsfFile
             SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
         };
 
-        private static IniDataParser GetIniDataParser() => new IniDataParser(IniParserReadConfiguration);
+        private static IniDataParser GetIniDataParser(CsfFileOptions options) => new IniDataParser(GetIniParserReadConfiguration(options));
 
-        private static IniData ParseIni(Stream stream)
+        private static IniData ParseIni(Stream stream, CsfFileOptions options)
         {
-            var parser = GetIniDataParser();
+            var parser = GetIniDataParser(options);
 
             using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
             {
@@ -81,7 +84,7 @@ namespace SadPencil.Ra2CsfFile
 
             var csf = new CsfFile(options);
 
-            var ini = ParseIni(stream);
+            var ini = ParseIni(stream, options);
             if (!ini.Sections.ContainsSection(INI_FILE_HEADER_SECTION_NAME))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing section [{INI_FILE_HEADER_SECTION_NAME}].");

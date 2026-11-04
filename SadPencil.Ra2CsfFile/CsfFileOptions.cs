@@ -26,7 +26,7 @@ namespace SadPencil.Ra2CsfFile
             {
                 return false;
             }
-            return this.Encoding1252ReadWorkaround == other.Encoding1252ReadWorkaround && this.Encoding1252WriteWorkaround == other.Encoding1252WriteWorkaround;
+            return this.Encoding1252ReadWorkaround == other.Encoding1252ReadWorkaround && this.Encoding1252WriteWorkaround == other.Encoding1252WriteWorkaround && this.PreserveIniValueWhitespace == other.PreserveIniValueWhitespace;
         }
 
         public override Int32 GetHashCode()
@@ -35,6 +35,7 @@ namespace SadPencil.Ra2CsfFile
             {
                 this.Encoding1252ReadWorkaround,
                 this.Encoding1252WriteWorkaround,
+                this.PreserveIniValueWhitespace,
             }.GetHashCode();
         }
 
@@ -64,7 +65,17 @@ namespace SadPencil.Ra2CsfFile
 
         /// <summary>
         /// If set, the keys will be sorted in ascending order.
+        /// </summary>
         public Boolean OrderByKey { get; set; } = false;
+
+        /// <summary>
+        /// By default, the underlying ini parser trims leading and trailing whitespace from every value, so a line like <c>Value=    a</c> is loaded as <c>a</c>. <br/>
+        /// Enabling this option keeps the leading and the trailing whitespace characters of the value lines when loading a .ini file,
+        /// which allows generating a .csf file whose label values start or end with spaces. <br/>
+        /// Note: the .csf file format itself has no such limitation, but the original game engine trims the whitespace
+        /// of the displayed strings at runtime, so this option is mainly useful together with an engine-side patch.
+        /// </summary>
+        public Boolean PreserveIniValueWhitespace { get; set; } = false;
     }
 }
 #pragma warning restore CA1805 // Do not initialize unnecessarily
