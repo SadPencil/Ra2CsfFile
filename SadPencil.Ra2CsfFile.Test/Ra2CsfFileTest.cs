@@ -59,7 +59,7 @@ namespace SadPencil.Ra2CsfFile.Test
         }
 
         [TestMethod]
-        public void TestPreserveIniValueWhitespace()
+        public void TestLoadFromIniFilePreservesValueWhitespace()
         {
             const String iniContent = "[SadPencil.Ra2CsfFile.Ini]\nIniVersion=2\nCsfVersion=3\nCsfLang=0\n\n[TEST]\nValue=    a\nValueLine2=  b  \n\n[PLAIN]\nValue=no-space\n";
 

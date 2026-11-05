@@ -43,6 +43,10 @@ namespace IniParser.Model.Configuration
         ///         key2 = value<br/>
         ///         </para>
         ///     </example>
+        ///     <para>
+        ///         A value keeps the whitespace after the assignment character, so the space of the example above belongs to the value.
+        ///         When an <see cref="IniData"/> is written, the assignment character is used without whitespace around it.
+        ///     </para>
         /// </remarks>
         public IniParserConfiguration()
         {

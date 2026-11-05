@@ -8,7 +8,7 @@ namespace IniFileParser.Tests.Unit.Parser
     public class ValueWhitespaceTests
     {
         [Test]
-        public void preserve_values_without_configuration()
+        public void preserve_values_by_default()
         {
             var data = new IniDataParser().Parse(" [ TEST ] \r\n Value \t=  a \t\r\n");
             Assert.That(data["TEST"]["Value"], Is.EqualTo("  a \t"));

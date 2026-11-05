@@ -60,12 +60,20 @@ namespace SadPencil.Ra2CsfFile
         /// Load an existing ini file that represent the stringtable, preserving each value line's leading and trailing whitespace.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
+        /// <remarks>
+        /// The whitespace after the assignment character belongs to the value, so a line written as
+        /// <c>Value = text</c> produces a value that starts with a space.
+        /// </remarks>
         public static CsfFile LoadFromIniFile(Stream stream) => LoadFromIniFile(stream, new CsfFileOptions());
         /// <summary>
         /// Load an existing ini file that represent the stringtable, preserving each value line's leading and trailing whitespace.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
         /// <param name="options">The CsfFileOptions.</param>
+        /// <remarks>
+        /// The whitespace after the assignment character belongs to the value, so a line written as
+        /// <c>Value = text</c> produces a value that starts with a space.
+        /// </remarks>
         public static CsfFile LoadFromIniFile(Stream stream, CsfFileOptions options)
         {
             if (stream == null)
@@ -163,6 +171,10 @@ namespace SadPencil.Ra2CsfFile
         /// <summary>
         /// Write an ini file that represent the stringtable.
         /// </summary>
+        /// <remarks>
+        /// The values are written as they are, and no whitespace is inserted around the assignment character,
+        /// so the whitespace at the start of a value is not lost.
+        /// </remarks>
         /// <param name="csf">The CsfFile object to be written.</param>
         /// <param name="stream">The file stream of a new ini file.</param>
         public static void WriteIniFile(CsfFile csf, Stream stream)
