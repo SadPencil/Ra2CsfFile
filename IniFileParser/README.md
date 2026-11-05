@@ -39,6 +39,11 @@ parse/format cycle, and the value would grow without bound.
 
 ## 3. Tests
 
-`IniFileParser.Tests` is the upstream test suite. Only the test data of the tests that compare a
-written ini file with its source had to change: their fixtures now use `key=value`, so those tests
-keep the upstream assertions. `Unit/Parser/ValueWhitespaceTests.cs` covers both changes above.
+`IniFileParser.Tests` is the upstream test suite, with three kinds of changes:
+
+- The fixtures use `key=value`. A value that starts with a space is only interesting to the
+  whitespace tests, so the remaining tests should not carry one just because their source line was
+  written with spaces around the assignment character.
+- The tests that compare a written ini file with its source compare text with normalized line
+  breaks, so they do not depend on the line break style of the platform they run on.
+- `Unit/Parser/ValueWhitespaceTests.cs` is new and covers both changes above.
