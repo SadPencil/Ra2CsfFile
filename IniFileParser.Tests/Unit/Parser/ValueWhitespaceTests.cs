@@ -1,3 +1,4 @@
+using System;
 using IniParser.Parser;
 using NUnit.Framework;
 
@@ -27,6 +28,28 @@ namespace IniFileParser.Tests.Unit.Parser
             var data = new IniDataParser().Parse(" \t[ TEST ] \t\r\n" + line);
 
             Assert.That(data["TEST"]["Value"], Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void write_values_without_spaces_around_the_assignment_character()
+        {
+            var data = new IniDataParser().Parse("[SECTION]\r\nkey = value\r\n");
+
+            Assert.That(data.ToString(), Is.EqualTo("[SECTION]" + Environment.NewLine + "key= value" + Environment.NewLine));
+        }
+
+        [Test]
+        public void rewrite_preserves_values_across_repeated_cycles()
+        {
+            string text = "[SECTION]\nkey =  value \n";
+
+            for (int i = 0; i < 3; i++)
+            {
+                text = new IniDataParser().Parse(text).ToString();
+            }
+
+            Assert.That(text, Is.EqualTo("[SECTION]\nkey=  value \n"));
+            Assert.That(new IniDataParser().Parse(text)["SECTION"]["key"], Is.EqualTo("  value "));
         }
     }
 }

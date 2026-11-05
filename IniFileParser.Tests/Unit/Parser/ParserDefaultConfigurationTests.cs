@@ -81,8 +81,6 @@ mykey1 = value1
         public void check_ini_writing()
         {
             var parser = new IniDataParser();
-            // Avoid inserting formatting spaces into values on each write/read cycle.
-            parser.Configuration.AssigmentSpacer = string.Empty;
             IniData data = parser.Parse(iniFileStr);
 
             var dataAsString = data.ToString();

@@ -50,7 +50,6 @@ namespace IniParser.Model.Configuration
             SectionStartChar = '[';
             SectionEndChar = ']';
             KeyValueAssigmentChar = '=';
-            AssigmentSpacer = " ";
             NewLineStr = Environment.NewLine;
             ConcatenateDuplicateKeys = false;
             AllowKeysWithoutSection = true;
@@ -189,14 +188,6 @@ namespace IniParser.Model.Configuration
         ///     Defaults to character '='
         /// </remarks>
         public char KeyValueAssigmentChar { get; set; }
-
-        /// <summary>
-        ///     Sets the string around KeyValuesAssignmentChar
-        /// </summary>
-        /// <remarks>
-        ///     Defaults to string ' '
-        /// </remarks>
-        public string AssigmentSpacer { get; set; }
 
         /// <summary>
         ///     Allows having keys in the file that don't belong to any section.

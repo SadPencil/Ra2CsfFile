@@ -14,7 +14,6 @@ namespace IniFileParser.Tests.Unit.Parser
             var data = new IniData();
             data.Sections.AddSection("section1");
             data["section1"].AddKey("key1", "value1");
-            data.Configuration.AssigmentSpacer = "";
 
             var parser = new StreamIniDataParser();
             string tempPath = System.IO.Path.GetTempFileName();

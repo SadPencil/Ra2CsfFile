@@ -15,13 +15,13 @@ namespace IniFileParser.Tests.Unit.Parser
 [section1]
 
 ;comment for key1
-key1 = value1
-key2 = value5
+key1=value1
+key2=value5
 
 [section2]
 
 ;comment for myKey1
-mykey1 = value1
+mykey1=value1
 ";
    
         [Test]
@@ -42,9 +42,9 @@ mykey1 = value1
             Assert.That(section1.Keys, Is.Not.Null);
             Assert.That(section1.Keys.Count, Is.EqualTo(2));
             Assert.That(section1.Keys.GetKeyData("key1"), Is.Not.Null);
-            Assert.That(section1.Keys["key1"], Is.EqualTo(" value1"));
+            Assert.That(section1.Keys["key1"], Is.EqualTo("value1"));
             Assert.That(section1.Keys.GetKeyData("key2"), Is.Not.Null);
-            Assert.That(section1.Keys["key2"], Is.EqualTo(" value5"));
+            Assert.That(section1.Keys["key2"], Is.EqualTo("value5"));
         }
          
         string iniFileStrCustom = 
@@ -52,13 +52,13 @@ mykey1 = value1
 <section1>
 
 #comment for key1
-key1 = value1
-key2 = value5
+key1=value1
+key2=value5
 
 <section2>
 
 #comment for myKey1
-mykey1 = value1
+mykey1=value1
 "; 
        
         [Test]
@@ -86,9 +86,9 @@ mykey1 = value1
             Assert.That(section1.Keys, Is.Not.Null);
             Assert.That(section1.Keys.Count, Is.EqualTo(2));
             Assert.That(section1.Keys.GetKeyData("key1"), Is.Not.Null);
-            Assert.That(section1.Keys["key1"], Is.EqualTo(" value1"));
+            Assert.That(section1.Keys["key1"], Is.EqualTo("value1"));
             Assert.That(section1.Keys.GetKeyData("key2"), Is.Not.Null);
-            Assert.That(section1.Keys["key2"], Is.EqualTo(" value5"));
+            Assert.That(section1.Keys["key2"], Is.EqualTo("value5"));
         }
 
         [Test]
@@ -96,8 +96,8 @@ mykey1 = value1
         {
             IniData data =  new IniDataParser().Parse(iniFileStr);
 
-            // The default formatter adds an assignment space before the preserved value.
-            Assert.That(data.ToString(), Is.EqualTo(iniFileStr.Replace(" = ", " =  ")));
+            // Writing reproduces the source file: no whitespace is inserted around the assignment character.
+            Assert.That(data.ToString(), Is.EqualTo(iniFileStr));
         }
                 
         [Test, Description("Test for Issue 3: http://code.google.com/p/ini-parser/issues/detail?id=3")]
