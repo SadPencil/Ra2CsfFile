@@ -64,6 +64,7 @@ namespace SadPencil.Ra2CsfFile
 
         /// <summary>
         /// If set, the keys will be sorted in ascending order.
+        /// </summary>
         public Boolean OrderByKey { get; set; } = false;
     }
 }
