@@ -40,8 +40,8 @@ namespace IniFileParser.Tests.Unit.Model
             config.CaseInsensitive = true;
             var data = new IniDataParser(config).Parse(iniData);
 
-            Assert.That(data["testsection"]["key1"], Is.EqualTo("value1"));
-            Assert.That(data["testSection"]["Key2"], Is.EqualTo("value2"));
+            Assert.That(data["testsection"]["key1"], Is.EqualTo(" value1"));
+            Assert.That(data["testSection"]["Key2"], Is.EqualTo(" value2"));
 
         }
 

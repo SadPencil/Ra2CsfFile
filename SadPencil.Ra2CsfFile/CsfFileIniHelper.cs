@@ -32,7 +32,6 @@ namespace SadPencil.Ra2CsfFile
             CommentRegex = new System.Text.RegularExpressions.Regex("a^"), // match nothing
             CaseInsensitive = true,
             AssigmentSpacer = String.Empty,
-            TrimProperties = false,
             SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
         };
 

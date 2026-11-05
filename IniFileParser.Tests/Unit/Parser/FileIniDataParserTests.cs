@@ -18,7 +18,7 @@ namespace IniFileParser.Tests.Unit.Parser
             IniData parsedData = parser.ReadFile("./Issue18_example.ini", Encoding.UTF8);
 
             Assert.That(parsedData.Sections.ContainsSection("Identität"));
-            Assert.That(parsedData.Sections["Identität"]["key"], Is.EqualTo("value"));
+            Assert.That(parsedData.Sections["Identität"]["key"], Is.EqualTo(" value"));
         }
 
         [Test, Description("Test for Issue 26: http://code.google.com/p/ini-parser/issues/detail?id=26")]
@@ -28,7 +28,7 @@ namespace IniFileParser.Tests.Unit.Parser
 
             IniData parsedData = parser.ReadFile("Issue11_example.ini");
 
-            Assert.That(parsedData.Global[".reg (Win)"], Is.EqualTo("notepad.exe"));
+            Assert.That(parsedData.Global[".reg (Win)"], Is.EqualTo(" notepad.exe"));
         }
 
         [Test, Description("Check on real files")]

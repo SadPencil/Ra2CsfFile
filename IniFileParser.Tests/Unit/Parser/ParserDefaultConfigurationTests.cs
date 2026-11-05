@@ -33,7 +33,7 @@ mykey1 = value1
 
             // Check global section
 
-            Assert.That(data.Global["global key"], Is.EqualTo("global value"));
+            Assert.That(data.Global["global key"], Is.EqualTo(" global value"));
 
             // global section is not computed when counting the number of sections in the
             // ini
@@ -49,13 +49,13 @@ mykey1 = value1
             Assert.That(section1.Keys.Count, Is.EqualTo(2));
             Assert.That(section1.Keys.GetKeyData("key 1"), Is.Not.Null);
 
-            // Check keys / values with spaces. Leading & trailing whitespace ignored
-            Assert.That(section1.Keys["key 1"], Is.EqualTo("value 1"));
+            // Key names are trimmed; all whitespace after the assignment character is preserved.
+            Assert.That(section1.Keys["key 1"], Is.EqualTo("      value 1"));
 
 
             Assert.That(section1.Keys.GetKeyData("key;2"), Is.Not.Null);
             // Check special characters as part of the key/value name
-            Assert.That(section1.Keys["key;2"], Is.EqualTo("va:lu;e.5"));
+            Assert.That(section1.Keys["key;2"], Is.EqualTo(" va:lu;e.5"));
 
 
             //
@@ -63,7 +63,7 @@ mykey1 = value1
             // Bad section name
             Assert.That(section2, Is.Null);
 
-            // Beware: leading and trailing whitespaces are ignored!
+            // Leading and trailing whitespace in section names is ignored.
             section2 = data.Sections.GetSectionData("section 2");
             Assert.That(section2, Is.Not.Null);
             Assert.That(section2.SectionName, Is.EqualTo("section 2"));
@@ -80,14 +80,19 @@ mykey1 = value1
         [Test]
         public void check_ini_writing()
         {
-            IniData data =  new IniDataParser().Parse(iniFileStr);
+            var parser = new IniDataParser();
+            // Avoid inserting formatting spaces into values on each write/read cycle.
+            parser.Configuration.AssigmentSpacer = string.Empty;
+            IniData data = parser.Parse(iniFileStr);
 
-            // ini file string with not-needed whitespace trimmed
             var dataAsString = data.ToString();
 
             // Generates a valid data file
-            IniData data2 = new IniDataParser().Parse(dataAsString);
+            IniData data2 = parser.Parse(dataAsString);
 
+            Assert.That(data2.Global["global key"], Is.EqualTo(" global value"));
+            Assert.That(data2["section1"]["key 1"], Is.EqualTo("      value 1"));
+            Assert.That(data2["section1"]["key;2"], Is.EqualTo(" va:lu;e.5"));
 
             // check all strings are equal
             Assert.That(dataAsString, Is.EqualTo(data2.ToString()));

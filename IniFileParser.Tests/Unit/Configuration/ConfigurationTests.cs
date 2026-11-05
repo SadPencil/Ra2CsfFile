@@ -90,7 +90,7 @@ name = Marble Zone
 
             var iniData = _parser.Parse(iniStr);
 
-            Assert.That(iniData["section1"][";data"], Is.EqualTo("2"));
+            Assert.That(iniData["section1"][";data"], Is.EqualTo(" 2"));
 
         }
 
@@ -109,9 +109,9 @@ name = Marble Zone
 
             Assert.That(data.Sections.Count, Is.EqualTo(0));
             Assert.That(data.Global.Count, Is.EqualTo(3));
-            Assert.That(data.Global["cyberdreams"], Is.EqualTo("i have no section, and i must scream"));
-            Assert.That(data.Global["this_is_not_a_comment"], Is.EqualTo(";no comment"));
-            Assert.That(data.Global["name"], Is.EqualTo("Marble Zone"), "Should not rewrite an existing key");
+            Assert.That(data.Global["cyberdreams"], Is.EqualTo(" i have no section, and i must scream"));
+            Assert.That(data.Global["this_is_not_a_comment"], Is.EqualTo(" ;no comment"));
+            Assert.That(data.Global["name"], Is.EqualTo(" Marble Zone"), "Should not rewrite an existing key");
         }
 
         [Test]
@@ -123,7 +123,7 @@ name = Marble Zone
             Assert.That(data.Sections.Count, Is.EqualTo(2));
 
             Assert.That(data.Global.Count, Is.EqualTo(1));
-            Assert.That(data.Global["cyberdreams"], Is.EqualTo("i have no section, and i must scream"));
+            Assert.That(data.Global["cyberdreams"], Is.EqualTo(" i have no section, and i must scream"));
             
             var section1 = data.Sections.GetSectionData("stage1");
 
@@ -136,9 +136,9 @@ name = Marble Zone
             Assert.That(section1.Keys, Is.Not.Null);
             Assert.That(section1.Keys.Count, Is.EqualTo(2));
             Assert.That(section1.Keys.GetKeyData("name"), Is.Not.Null);
-            Assert.That(section1.Keys["name"], Is.EqualTo("Green Hill Zone"));
+            Assert.That(section1.Keys["name"], Is.EqualTo(" Green Hill Zone"));
             Assert.That(section1.Keys.GetKeyData("this_is_not_a_comment"), Is.Not.Null);
-            Assert.That(section1.Keys["this_is_not_a_comment"], Is.EqualTo(";no comment"));
+            Assert.That(section1.Keys["this_is_not_a_comment"], Is.EqualTo(" ;no comment"));
         }
 
         [Test]
@@ -148,7 +148,7 @@ name = Marble Zone
 
             Assert.That(
                 data.ToString().Replace(Environment.NewLine, string.Empty), 
-                Is.EqualTo(iniFileStr.Replace(Environment.NewLine, string.Empty)));
+                Is.EqualTo(iniFileStr.Replace(" = ", " =  ").Replace(Environment.NewLine, string.Empty)));
         }
 
         [Test]
@@ -160,7 +160,7 @@ name = Marble Zone
 
             Assert.That(
                 data.ToString().Replace("^_^", string.Empty), 
-                Is.EqualTo(iniFileStr.Replace(Environment.NewLine, string.Empty)));
+                Is.EqualTo(iniFileStr.Replace(" = ", " =  ").Replace(Environment.NewLine, string.Empty)));
         }
 
         [Test]

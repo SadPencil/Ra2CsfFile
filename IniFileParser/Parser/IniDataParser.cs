@@ -246,10 +246,8 @@ namespace IniParser.Parser
         /// <param name="currentLine">The string with the line to process</param>
         protected virtual void ProcessLine(string currentLine, IniData currentIniData)
         {
-            // Keep the trailing whitespace characters of the line when TrimProperties is false,
-            // so that they can be preserved as part of the value. The leading whitespace
-            // characters of the line do not belong to any value, so they are always trimmed.
-            currentLine = Configuration.TrimProperties ? currentLine.Trim() : currentLine.TrimStart();
+            // Trailing whitespace belongs to the value; indentation before the key does not.
+            currentLine = currentLine.TrimStart();
 
             // Extract comments from current line and store them in a tmp field
             if (LineContainsAComment(currentLine))
@@ -399,9 +397,7 @@ namespace IniParser.Parser
         {
             int index = s.IndexOf(Configuration.KeyValueAssigmentChar, 0);
 
-            return Configuration.TrimProperties
-                ? s.Substring(index + 1, s.Length - index - 1).Trim()
-                : s.Substring(index + 1, s.Length - index - 1);
+            return s.Substring(index + 1, s.Length - index - 1);
         }
 
         /// <summary>

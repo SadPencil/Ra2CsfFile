@@ -1,4 +1,3 @@
-using IniParser.Model.Configuration;
 using IniParser.Parser;
 using NUnit.Framework;
 
@@ -8,13 +7,10 @@ namespace IniFileParser.Tests.Unit.Parser
     public class ValueWhitespaceTests
     {
         [Test]
-        public void trim_values_by_default()
+        public void preserve_values_without_configuration()
         {
-            var configuration = new IniParserConfiguration();
-            Assert.That(configuration.TrimProperties, Is.True);
-
-            var data = new IniDataParser(configuration).Parse(" [ TEST ] \r\n Value \t=  a \t\r\n");
-            Assert.That(data["TEST"]["Value"], Is.EqualTo("a"));
+            var data = new IniDataParser().Parse(" [ TEST ] \r\n Value \t=  a \t\r\n");
+            Assert.That(data["TEST"]["Value"], Is.EqualTo("  a \t"));
         }
 
         [TestCase("Value=    a\n", "    a")]
@@ -25,25 +21,12 @@ namespace IniFileParser.Tests.Unit.Parser
         [TestCase("Value= a=b \n", " a=b ")]
         [TestCase("Value=\u00a0a\u3000\n", "\u00a0a\u3000")]
         [TestCase("Value= ;comment-like text \n", " ;comment-like text ")]
+        [TestCase("Value=no-space\n", "no-space")]
         public void preserve_value_whitespace_while_trimming_names(string line, string expected)
         {
-            var configuration = new IniParserConfiguration { TrimProperties = false };
-            var data = new IniDataParser(configuration).Parse(" \t[ TEST ] \t\r\n" + line);
+            var data = new IniDataParser().Parse(" \t[ TEST ] \t\r\n" + line);
 
             Assert.That(data["TEST"]["Value"], Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void copy_and_clone_preserve_the_whitespace_option()
-        {
-            var configuration = new IniParserConfiguration { TrimProperties = false };
-            var copy = new IniParserConfiguration(configuration);
-            var clone = configuration.Clone();
-
-            Assert.That(copy.TrimProperties, Is.False);
-            Assert.That(clone.TrimProperties, Is.False);
-            // IniParserConfiguration's copy constructor does not copy KeyValueAssigmentChar.
-            Assert.That(new IniDataParser(clone).Parse("Value=  a  \n").Global["Value"], Is.EqualTo("  a  "));
         }
     }
 }
