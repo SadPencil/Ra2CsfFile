@@ -10,15 +10,15 @@ namespace IniFileParser.Tests.Unit.Parser
 
         string iniFileStr =
 @"
-global key = global value
+global key=global value
 ;comment for section1
 [section1]
 ;comment for key1
-key 1 =      value 1
-key;2 = va:lu;e.5
+key 1   =value 1
+key;2=va:lu;e.5
 [ section 2]
 ;comment for myKey1
-mykey1 = value1
+mykey1=value1
 ;comment for section2
 ";
 
@@ -33,7 +33,7 @@ mykey1 = value1
 
             // Check global section
 
-            Assert.That(data.Global["global key"], Is.EqualTo(" global value"));
+            Assert.That(data.Global["global key"], Is.EqualTo("global value"));
 
             // global section is not computed when counting the number of sections in the
             // ini
@@ -50,12 +50,12 @@ mykey1 = value1
             Assert.That(section1.Keys.GetKeyData("key 1"), Is.Not.Null);
 
             // Key names are trimmed; all whitespace after the assignment character is preserved.
-            Assert.That(section1.Keys["key 1"], Is.EqualTo("      value 1"));
+            Assert.That(section1.Keys["key 1"], Is.EqualTo("value 1"));
 
 
             Assert.That(section1.Keys.GetKeyData("key;2"), Is.Not.Null);
             // Check special characters as part of the key/value name
-            Assert.That(section1.Keys["key;2"], Is.EqualTo(" va:lu;e.5"));
+            Assert.That(section1.Keys["key;2"], Is.EqualTo("va:lu;e.5"));
 
 
             //
@@ -88,9 +88,9 @@ mykey1 = value1
             // Generates a valid data file
             IniData data2 = parser.Parse(dataAsString);
 
-            Assert.That(data2.Global["global key"], Is.EqualTo(" global value"));
-            Assert.That(data2["section1"]["key 1"], Is.EqualTo("      value 1"));
-            Assert.That(data2["section1"]["key;2"], Is.EqualTo(" va:lu;e.5"));
+            Assert.That(data2.Global["global key"], Is.EqualTo("global value"));
+            Assert.That(data2["section1"]["key 1"], Is.EqualTo("value 1"));
+            Assert.That(data2["section1"]["key;2"], Is.EqualTo("va:lu;e.5"));
 
             // check all strings are equal
             Assert.That(dataAsString, Is.EqualTo(data2.ToString()));

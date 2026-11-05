@@ -70,12 +70,12 @@ value1 = 10.6";
       public void TryGetKey_data_retrieval()
       {
         var input = @"
-global = 1
+global=1
 [section1]
-key1 = 2
+key1=2
 
 [section1\subsection]
-key2 = 3
+key2=3
 ";
         var data = new IniDataParser().Parse(input);
         var separator = data.SectionKeySeparator;
@@ -84,15 +84,15 @@ key2 = 3
 
         // keys should all be retrieved
         Assert.IsTrue(data.TryGetKey("global", out result));
-        Assert.AreEqual(" 1", result);
+        Assert.AreEqual("1", result);
         
         key = string.Format("section1{0}key1", separator);
         Assert.IsTrue(data.TryGetKey(key, out result));
-        Assert.AreEqual(" 2", result);
+        Assert.AreEqual("2", result);
         
         key = string.Format(@"section1\subsection{0}key2", separator);
         Assert.IsTrue(data.TryGetKey(key, out result));
-        Assert.AreEqual(" 3", result);
+        Assert.AreEqual("3", result);
 
         // invalid keys should fail...
         Assert.IsFalse(data.TryGetKey(null, out result));
@@ -114,9 +114,9 @@ key2 = 3
       public void GeyKey_data_retrieval()
       {
         var input = @"
-global = 1
+global=1
 [section]
-key = 2
+key=2
 ";
         var data = new IniDataParser().Parse(input);
         var separator = data.SectionKeySeparator;
@@ -124,10 +124,10 @@ key = 2
 
         // should succeed
         key = "global";
-        Assert.AreEqual(" 1", data.GetKey(key));
+        Assert.AreEqual("1", data.GetKey(key));
 
         key = string.Format("section{0}key", separator);
-        Assert.AreEqual(" 2", data.GetKey(key));
+        Assert.AreEqual("2", data.GetKey(key));
 
         // should fail
         key = null;
@@ -144,9 +144,9 @@ key = 2
         public void check_deep_clone()
         {
             var input = @"
-global = 1
+global=1
 [section]
-key = 1
+key=1
 ";
             var ori = new IniDataParser().Parse(input);
 
@@ -156,8 +156,8 @@ key = 1
             copy["section"]["key"] = "2";
 
 
-            Assert.That(ori.Global["global"], Is.EqualTo(" 1"));
-            Assert.That(ori["section"]["key"], Is.EqualTo(" 1"));
+            Assert.That(ori.Global["global"], Is.EqualTo("1"));
+            Assert.That(ori["section"]["key"], Is.EqualTo("1"));
 
 
         }

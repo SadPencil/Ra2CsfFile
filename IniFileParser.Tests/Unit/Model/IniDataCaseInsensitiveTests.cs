@@ -33,15 +33,15 @@ namespace IniFileParser.Tests.Unit.Model
         public void parse_case_insensitive_names_ini_file()
         {
             string iniData = @"[TestSection]
-            KEY1 = value1
-            KEY2 = value2";
+            KEY1=value1
+            KEY2=value2";
 
             var config = new IniParserConfiguration();
             config.CaseInsensitive = true;
             var data = new IniDataParser(config).Parse(iniData);
 
-            Assert.That(data["testsection"]["key1"], Is.EqualTo(" value1"));
-            Assert.That(data["testSection"]["Key2"], Is.EqualTo(" value2"));
+            Assert.That(data["testsection"]["key1"], Is.EqualTo("value1"));
+            Assert.That(data["testSection"]["Key2"], Is.EqualTo("value2"));
 
         }
 

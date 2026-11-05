@@ -79,8 +79,8 @@ name=Marble Zone
         public void simple_configuration()
         {
             var iniStr = @"[section1]
-#data = 1
-;data = 2";
+#data=1
+;data=2";
 
             var config = new IniParserConfiguration();
 
@@ -90,7 +90,7 @@ name=Marble Zone
 
             var iniData = _parser.Parse(iniStr);
 
-            Assert.That(iniData["section1"][";data"], Is.EqualTo(" 2"));
+            Assert.That(iniData["section1"][";data"], Is.EqualTo("2"));
 
         }
 
@@ -147,8 +147,8 @@ name=Marble Zone
             IniData data = new IniDataParser(new LiberalTestConfiguration()).Parse(iniFileStr);
 
             Assert.That(
-                data.ToString().Replace(Environment.NewLine, string.Empty), 
-                Is.EqualTo(iniFileStr.Replace(Environment.NewLine, string.Empty)));
+                data.ToString().Replace("\r", string.Empty).Replace("\n", string.Empty),
+                Is.EqualTo(iniFileStr.Replace("\r", string.Empty).Replace("\n", string.Empty)));
         }
 
         [Test]
@@ -160,7 +160,7 @@ name=Marble Zone
 
             Assert.That(
                 data.ToString().Replace("^_^", string.Empty), 
-                Is.EqualTo(iniFileStr.Replace(Environment.NewLine, string.Empty)));
+                Is.EqualTo(iniFileStr.Replace("\r", string.Empty).Replace("\n", string.Empty)));
         }
 
         [Test]

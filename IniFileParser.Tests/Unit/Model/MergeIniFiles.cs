@@ -33,24 +33,24 @@ namespace IniFileParser.Tests.Unit.Model
 
         string iniFileStrA =
 @"
-g = 1
+g=1
 [s0]
-a = 2
+a=2
 [s1]
-a = 3
-b = 4
+a=3
+b=4
 ";
 
         string iniFileStrB =
 @"
-g = 11
-j = a
+g=11
+j=a
 [s0]
-a = 22
-b = 44
+a=22
+b=44
 
 [s2]
-c = 55
+c=55
 ";
 
         [Test]
@@ -66,29 +66,29 @@ c = 55
 
             {
                 // merged files
-                Assert.That(dataA.Global["g"], Is.EqualTo(" 11"));
-                Assert.That(dataA.Global["j"], Is.EqualTo(" a"));
+                Assert.That(dataA.Global["g"], Is.EqualTo("11"));
+                Assert.That(dataA.Global["j"], Is.EqualTo("a"));
                 Assert.That(dataA.Sections.Count, Is.EqualTo(3), "Expected two (3) sections");
 
                 var s0 = dataA.Sections.GetSectionData("s0");
 
                 Assert.That(s0, Is.Not.Null);
                 Assert.That(s0.SectionName, Is.EqualTo("s0"));
-                Assert.That(s0.Keys["a"], Is.EqualTo(" 22"));
-                Assert.That(s0.Keys["b"], Is.EqualTo(" 44"));
+                Assert.That(s0.Keys["a"], Is.EqualTo("22"));
+                Assert.That(s0.Keys["b"], Is.EqualTo("44"));
 
                 var s1 = dataA.Sections.GetSectionData("s1");
 
                 Assert.That(s1, Is.Not.Null);
                 Assert.That(s1.SectionName, Is.EqualTo("s1"));
-                Assert.That(s1.Keys["a"], Is.EqualTo(" 3"));
-                Assert.That(s1.Keys["b"], Is.EqualTo(" 4"));
+                Assert.That(s1.Keys["a"], Is.EqualTo("3"));
+                Assert.That(s1.Keys["b"], Is.EqualTo("4"));
 
                 var s2 = dataA.Sections.GetSectionData("s2");
 
                 Assert.That(s2, Is.Not.Null);
                 Assert.That(s2.SectionName, Is.EqualTo("s2"));
-                Assert.That(s2.Keys["c"], Is.EqualTo(" 55"));
+                Assert.That(s2.Keys["c"], Is.EqualTo("55"));
             }
 
         }

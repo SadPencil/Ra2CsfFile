@@ -70,14 +70,16 @@ namespace IniFileParser.Tests.Unit.Parser
         [Test]
         public void rewrite_preserves_values_across_repeated_cycles()
         {
-            string text = "[SECTION]\nkey =  value \n";
+            // The formatter writes with Environment.NewLine, so the expected text has to use it too.
+            string newLine = Environment.NewLine;
+            string text = "[SECTION]" + newLine + "key =  value " + newLine;
 
             for (int i = 0; i < 3; i++)
             {
                 text = new IniDataParser().Parse(text).ToString();
             }
 
-            Assert.That(text, Is.EqualTo("[SECTION]\nkey=  value \n"));
+            Assert.That(text, Is.EqualTo("[SECTION]" + newLine + "key=  value " + newLine));
             Assert.That(new IniDataParser().Parse(text)["SECTION"]["key"], Is.EqualTo("  value "));
         }
     }

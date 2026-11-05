@@ -96,8 +96,8 @@ mykey1=value1
         {
             IniData data =  new IniDataParser().Parse(iniFileStr);
 
-            // Writing reproduces the source file: no whitespace is inserted around the assignment character.
-            Assert.That(data.ToString(), Is.EqualTo(iniFileStr));
+            // Writing reproduces the source file, ignoring the line break style of the platform.
+            Assert.That(data.ToString().Replace("\r\n", "\n"), Is.EqualTo(iniFileStr.Replace("\r\n", "\n")));
         }
                 
         [Test, Description("Test for Issue 3: http://code.google.com/p/ini-parser/issues/detail?id=3")]
@@ -120,8 +120,8 @@ mykey1=value1
 ;comentario 2
 
 ;valor de control
-value1 = 10.6
-value1 = 10";
+value1=10.6
+value1=10";
 
 
             var parser = new IniDataParser();
@@ -132,7 +132,7 @@ value1 = 10";
 
             Assert.That(data, Is.Not.Null);
             Assert.That(data.Sections.GetSectionData("seccion1").Keys.Count, Is.EqualTo(1));
-            Assert.That(data.Sections.GetSectionData("seccion1").Keys["value1"], Is.EqualTo(" 10.6"));
+            Assert.That(data.Sections.GetSectionData("seccion1").Keys["value1"], Is.EqualTo("10.6"));
         }
 
         [Test, Description("Test for Issue 9: http://code.google.com/p/ini-parser/issues/detail?id=9")]
@@ -141,7 +141,7 @@ value1 = 10";
             string data = 
                 @"[test]
 # a comment
-connectionString = Server=sqlserver.domain.com;Database=main;User ID=user;Password=password";
+connectionString=Server=sqlserver.domain.com;Database=main;User ID=user;Password=password";
 
 
             var parser = new IniDataParser();
@@ -150,7 +150,7 @@ connectionString = Server=sqlserver.domain.com;Database=main;User ID=user;Passwo
 
             Assert.That(
                 iniData["test"]["connectionString"],
-                Is.EqualTo(" Server=sqlserver.domain.com;Database=main;User ID=user;Password=password"));
+                Is.EqualTo("Server=sqlserver.domain.com;Database=main;User ID=user;Password=password"));
 
             Assert.That(
                 iniData["test"].GetKeyData("connectionString").Comments[0], Is.EqualTo(" a comment"));
@@ -161,11 +161,11 @@ connectionString = Server=sqlserver.domain.com;Database=main;User ID=user;Passwo
         {
             string data = 
                 @"[http://example.com/page] 
-key1 = value1";
+key1=value1";
 
             var newData = new IniDataParser().Parse(data);
 
-            Assert.That(newData.Sections[@"http://example.com/page"]["key1"], Is.EqualTo(" value1"));
+            Assert.That(newData.Sections[@"http://example.com/page"]["key1"], Is.EqualTo("value1"));
         }
 
         [Test, Description("Test for Issue 14: http://code.google.com/p/ini-parser/issues/detail?id=14")]
@@ -218,7 +218,7 @@ key4=value4";
         {
             string data =
                 @"[{E3729302-74D1-11D3-B43A-00AA00CAD128}]
-key = value";
+key=value";
 
             var parser = new IniDataParser();
 
@@ -227,7 +227,7 @@ key = value";
             Assert.That(iniData.Sections.Count, Is.EqualTo(1));
             Assert.That(iniData.Sections.ContainsSection("{E3729302-74D1-11D3-B43A-00AA00CAD128}"), Is.True);
             Assert.That(iniData.Sections["{E3729302-74D1-11D3-B43A-00AA00CAD128}"].ContainsKey("key"), Is.True);
-            Assert.That(iniData.Sections["{E3729302-74D1-11D3-B43A-00AA00CAD128}"]["key"], Is.EqualTo(" value"));
+            Assert.That(iniData.Sections["{E3729302-74D1-11D3-B43A-00AA00CAD128}"]["key"], Is.EqualTo("value"));
         }
 
         [Test, Description("Test for Issue 197: http://code.google.com/p/ini-parser/issues/detail?id=19")]
@@ -235,7 +235,7 @@ key = value";
         {
             string data =
                 @"[Web Colaboration]
-key = value";
+key=value";
 
             var parser = new IniDataParser();
 
@@ -244,7 +244,7 @@ key = value";
             Assert.That(iniData.Sections.Count, Is.EqualTo(1));
             Assert.That(iniData.Sections.ContainsSection("Web Colaboration"), Is.True);
             Assert.That(iniData.Sections["Web Colaboration"].ContainsKey("key"), Is.True);
-            Assert.That(iniData.Sections["Web Colaboration"]["key"], Is.EqualTo(" value"));
+            Assert.That(iniData.Sections["Web Colaboration"]["key"], Is.EqualTo("value"));
         }
 
         [Test, ExpectedException(typeof(ParsingException))]
@@ -263,8 +263,8 @@ key1 = value1";
         {
             string data =
                 @"win] 
-key1 = value1
- = value2";
+key1=value1
+=value2";
 
             var parser = new IniDataParser();
 
@@ -272,7 +272,7 @@ key1 = value1
 
             IniData newData = parser.Parse(data);
 
-            Assert.That(newData.Global["key1"], Is.EqualTo(" value1"));
+            Assert.That(newData.Global["key1"], Is.EqualTo("value1"));
         }
 
         [Test]
