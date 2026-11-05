@@ -24,11 +24,12 @@ File=d.txt
             parser.Configuration.AllowDuplicateSections = true;
 
             var iniData = parser.Parse(iniFileStr);
-            Assert.That(iniData["MySection"]["File"] == "a.txt;b.txt;c.txt;d.txt");
+            Assert.That(iniData["MySection"]["File"], Is.EqualTo("a.txt;b.txt;c.txt;d.txt"));
 
 
         }
 
+        [Test]
         public void test_duplicated_keys_are_concatenated_with_different_string()
         {
             var parser = new ConcatenateDuplicatedKeysIniDataParser();
@@ -36,7 +37,18 @@ File=d.txt
             parser.Configuration.AllowDuplicateSections = true;
 
             var inidata = parser.Parse(iniFileStr);
-            Assert.That(inidata["MySection"]["File"] == "a.txt+b.txt+c.txt+d.txt");
+            Assert.That(inidata["MySection"]["File"], Is.EqualTo("a.txt+b.txt+c.txt+d.txt"));
+        }
+
+        [Test]
+        public void duplicated_keys_keep_the_whitespace_of_each_value()
+        {
+            var parser = new ConcatenateDuplicatedKeysIniDataParser();
+            parser.Configuration.AllowDuplicateSections = true;
+
+            var iniData = parser.Parse("[MySection]\nFile = a.txt\n[MySection]\nFile = b.txt\n");
+
+            Assert.That(iniData["MySection"]["File"], Is.EqualTo(" a.txt; b.txt"));
         }
 
     }
