@@ -42,8 +42,7 @@ namespace IniFileParser.Tests.Unit.Parser
 
             Assert.That(copy.TrimProperties, Is.False);
             Assert.That(clone.TrimProperties, Is.False);
-            // The upstream copy constructor omits unrelated settings such as the assignment
-            // character. Check the new switch here; parsing uses the complete Clone() path.
+            // IniParserConfiguration's copy constructor does not copy KeyValueAssigmentChar.
             Assert.That(new IniDataParser(clone).Parse("Value=  a  \n").Global["Value"], Is.EqualTo("  a  "));
         }
     }

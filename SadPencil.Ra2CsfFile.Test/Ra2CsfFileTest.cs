@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace SadPencil.Ra2CsfFile.Test
@@ -37,22 +36,10 @@ namespace SadPencil.Ra2CsfFile.Test
             // Read ini file
             var iniCsfFile = CsfFileIniHelper.LoadFromIniFile(iniMemoryStream, new CsfFileOptions() { OrderByKey = orderByKey });
 
-            // KNOWN ISSUES
-            // Some CSF labels have space characters as prefix or suffix. The ini format can't support representing such a trimmable line right now.
-            var keysCopy = inputCsfFile.Labels.Keys.ToList();
-            foreach (String label in keysCopy)
+            foreach (String label in inputCsfFile.Labels.Keys)
             {
-                String value = inputCsfFile.Labels[label];
-                String trimmedValue = CsfFileIniHelper.TrimMultiLine(value);
-                if (!value.Equals(trimmedValue, StringComparison.InvariantCulture))
-                {
-                    Console.WriteLine($"Trim CSF label {label}");
-                    Boolean existed = inputCsfFile.AddLabel(label, trimmedValue);
-                    Assert.IsTrue(existed);
-                }
-
                 Assert.IsTrue(iniCsfFile.Labels.ContainsKey(label));
-                Assert.AreEqual(iniCsfFile.Labels[label], iniCsfFile.Labels[label]);
+                Assert.AreEqual(inputCsfFile.Labels[label], iniCsfFile.Labels[label]);
             }
 
             // Compare them
@@ -75,19 +62,10 @@ namespace SadPencil.Ra2CsfFile.Test
         {
             const String iniContent = "[SadPencil.Ra2CsfFile.Ini]\nIniVersion=2\nCsfVersion=3\nCsfLang=0\n\n[TEST]\nValue=    a\nValueLine2=  b  \n\n[PLAIN]\nValue=no-space\n";
 
-            // Without the option, the leading and the trailing whitespace characters of the values are trimmed.
-            CsfFile defaultCsfFile;
-            using (MemoryStream ms = new(Encoding.UTF8.GetBytes(iniContent)))
-            {
-                defaultCsfFile = CsfFileIniHelper.LoadFromIniFile(ms);
-            }
-            Assert.AreEqual("a\nb", defaultCsfFile.Labels["TEST"]);
-
-            // With the option, the leading and the trailing whitespace characters of the values are preserved.
             CsfFile csfFile;
             using (MemoryStream ms = new(Encoding.UTF8.GetBytes(iniContent)))
             {
-                csfFile = CsfFileIniHelper.LoadFromIniFile(ms, new CsfFileOptions() { PreserveIniValueWhitespace = true });
+                csfFile = CsfFileIniHelper.LoadFromIniFile(ms);
             }
             Assert.AreEqual("    a\n  b  ", csfFile.Labels["TEST"]);
             Assert.AreEqual("no-space", csfFile.Labels["PLAIN"]);
@@ -105,8 +83,24 @@ namespace SadPencil.Ra2CsfFile.Test
                 Assert.AreEqual("    a\n  b  ", roundTripCsfFile.Labels["TEST"]);
             }
 
-            // The two options are not equal.
-            Assert.AreNotEqual(new CsfFileOptions(), new CsfFileOptions() { PreserveIniValueWhitespace = true });
+            // Saving to INI and loading it again also keeps every original value.
+            this.TestCsfFile(csfFile);
+        }
+
+        [TestMethod]
+        public void TestIniValuesWithoutSurroundingWhitespace()
+        {
+            const String iniContent = "[SadPencil.Ra2CsfFile.Ini]\r\nIniVersion=2\r\nCsfVersion=3\r\nCsfLang=0\r\n\r\n[TEST]\r\nValue=hello  world\r\nValueLine2=a=b;literal\r\n\r\n[EMPTY]\r\nValue=\r\n";
+
+            CsfFile csfFile;
+            using (MemoryStream ms = new(Encoding.UTF8.GetBytes(iniContent)))
+            {
+                csfFile = CsfFileIniHelper.LoadFromIniFile(ms, new CsfFileOptions());
+            }
+
+            Assert.AreEqual("hello  world\na=b;literal", csfFile.Labels["TEST"]);
+            Assert.AreEqual(String.Empty, csfFile.Labels["EMPTY"]);
+            this.TestCsfFile(csfFile);
         }
 
         [TestMethod]

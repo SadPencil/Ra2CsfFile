@@ -24,7 +24,7 @@ namespace SadPencil.Ra2CsfFile
 
         private const Int32 INI_VERSION = 2;
 
-        private static IniParserConfiguration GetIniParserReadConfiguration(CsfFileOptions options) => new IniParserConfiguration()
+        private static IniParserConfiguration IniParserReadConfiguration { get; } = new IniParserConfiguration()
         {
             AllowDuplicateKeys = true,
             AllowDuplicateSections = true,
@@ -32,9 +32,7 @@ namespace SadPencil.Ra2CsfFile
             CommentRegex = new System.Text.RegularExpressions.Regex("a^"), // match nothing
             CaseInsensitive = true,
             AssigmentSpacer = String.Empty,
-            // When PreserveIniValueWhitespace is enabled, the leading and the trailing whitespace
-            // characters of every value line are kept instead of being trimmed.
-            TrimProperties = !options.PreserveIniValueWhitespace,
+            TrimProperties = false,
             SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
         };
 
@@ -49,11 +47,11 @@ namespace SadPencil.Ra2CsfFile
             SectionRegex = new Regex("^(\\s*?)\\[{1}\\s*[\\p{L}\\p{P}\\p{M}_\\\"\\'\\{\\}\\#\\+\\;\\*\\%\\(\\)\\=\\?\\&\\$\\^\\<\\>\\`\\^|\\,\\:\\/\\.\\-\\w\\d\\s\\\\\\~]+\\s*\\](\\s*?)$"),
         };
 
-        private static IniDataParser GetIniDataParser(CsfFileOptions options) => new IniDataParser(GetIniParserReadConfiguration(options));
+        private static IniDataParser GetIniDataParser() => new IniDataParser(IniParserReadConfiguration);
 
-        private static IniData ParseIni(Stream stream, CsfFileOptions options)
+        private static IniData ParseIni(Stream stream)
         {
-            var parser = GetIniDataParser(options);
+            var parser = GetIniDataParser();
 
             using (var sr = new StreamReader(stream, new UTF8Encoding(false)))
             {
@@ -62,12 +60,12 @@ namespace SadPencil.Ra2CsfFile
         }
 
         /// <summary>
-        /// Load an existing ini file that represent the stringtable.
+        /// Load an existing ini file that represent the stringtable, preserving each value line's leading and trailing whitespace.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
         public static CsfFile LoadFromIniFile(Stream stream) => LoadFromIniFile(stream, new CsfFileOptions());
         /// <summary>
-        /// Load an existing ini file that represent the stringtable.
+        /// Load an existing ini file that represent the stringtable, preserving each value line's leading and trailing whitespace.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
         /// <param name="options">The CsfFileOptions.</param>
@@ -84,7 +82,7 @@ namespace SadPencil.Ra2CsfFile
 
             var csf = new CsfFile(options);
 
-            var ini = ParseIni(stream, options);
+            var ini = ParseIni(stream);
             if (!ini.Sections.ContainsSection(INI_FILE_HEADER_SECTION_NAME))
             {
                 throw new Exception($"Invalid {INI_TYPE_NAME} file. Missing section [{INI_FILE_HEADER_SECTION_NAME}].");

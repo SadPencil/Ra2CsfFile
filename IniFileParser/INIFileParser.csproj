@@ -5,10 +5,10 @@
     <AssemblyName>INIFileParser</AssemblyName>
     <RootNamespace>IniParser</RootNamespace>
     <Version>2.5.2</Version>
-    <!-- This project is not published on its own; it is shipped inside SadPencil.Ra2CsfFile. -->
+    <!-- INIFileParser.dll is included in the SadPencil.Ra2CsfFile package and has no separate package. -->
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- The imported upstream code has malformed XML doc comments and uses obsolete members. -->
+    <!-- ini-parser 2.5.2 contains malformed XML documentation and uses obsolete members. -->
     <NoWarn>$(NoWarn);CS1591;CS0618;CS1570;CS1573;CS1574</NoWarn>
   </PropertyGroup>
 
