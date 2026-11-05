@@ -214,12 +214,6 @@ namespace SadPencil.Ra2CsfFile
 
                     _ = labelSection.AddKey(keyName, keyValue);
                 }
-
-                // Add trimmable line warning comment
-                if (labelValue != TrimMultiLine(labelValue))
-                {
-                    _ = labelSection.AddKey("WhiteSpaceWarning", "WARNING: This label value contains leading or trailing whitespace characters in one or more lines.");
-                }
             }
 
             using (var sw = new StreamWriter(stream, new UTF8Encoding(false)))

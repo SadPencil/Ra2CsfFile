@@ -120,6 +120,26 @@ namespace SadPencil.Ra2CsfFile.Test
             }
         }
 
+
+        [TestMethod]
+        public void TestIniFileHasNoWhiteSpaceWarning()
+        {
+            CsfFile csfFile = new CsfFile();
+            csfFile.AddLabel("TRAILING", "abc   ");
+
+            Byte[] iniBytes;
+            using (MemoryStream ms = new())
+            {
+                CsfFileIniHelper.WriteIniFile(csfFile, ms);
+                iniBytes = ms.ToArray();
+            }
+            String iniText = Encoding.UTF8.GetString(iniBytes);
+
+            // The whitespace of a label value is preserved, so the generated ini file no longer carries a warning about it.
+            Assert.IsFalse(iniText.IndexOf("WhiteSpaceWarning", StringComparison.Ordinal) >= 0, "The generated ini file must not contain a whitespace warning.");
+            Assert.IsTrue(iniText.IndexOf("Value=abc   ", StringComparison.Ordinal) >= 0, "The trailing whitespace of the label value must be preserved.");
+        }
+
         [TestMethod]
         public void TestNormalizeLineBreaks()
         {
