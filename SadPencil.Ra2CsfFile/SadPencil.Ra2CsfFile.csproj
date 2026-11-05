@@ -16,7 +16,7 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>preserve the whitespace of label values; write "key=value" without spaces around the equals sign; normalize the line breaks of label values to LF; drop the WhiteSpaceWarning key</PackageReleaseNotes>
+    <PackageReleaseNotes>preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
