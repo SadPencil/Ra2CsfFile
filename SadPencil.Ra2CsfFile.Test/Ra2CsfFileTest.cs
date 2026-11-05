@@ -121,6 +121,16 @@ namespace SadPencil.Ra2CsfFile.Test
         }
 
 
+
+        [TestMethod]
+        public void TestTrimMultiLine()
+        {
+            Assert.AreEqual("a\nb", CsfFileIniHelper.TrimMultiLine("  a  \n\tb\t"));
+            Assert.AreEqual("a\n\nb", CsfFileIniHelper.TrimMultiLine("a\r\n\r\n b "));
+            Assert.AreEqual(String.Empty, CsfFileIniHelper.TrimMultiLine("   "));
+            Assert.IsNull(CsfFileIniHelper.TrimMultiLine(null));
+        }
+
         [TestMethod]
         public void TestIniFileHasNoWhiteSpaceWarning()
         {
