@@ -234,13 +234,18 @@ namespace IniParser.Parser
         /// </returns>
         protected virtual string ExtractComment(string line)
         {
-            // Cut out the match itself instead of the trimmed comment text, so that the whitespace of
-            // the comment ("  ; comment   " ends with three spaces) does not survive in the value.
             var match = Configuration.CommentRegex.Match(line);
-            string comment = match.Value.Trim();
 
-            _currentCommentListTemp.Add(comment.Substring(1, comment.Length - 1));
+            // The comment text is stored without the whitespace of the match: an expression such as
+            // "\s*;.*" includes the whitespace in front of the comment character, and a comment line
+            // usually ends with some. Substring(1) then drops the comment character itself, which has
+            // to be the first character of what we store.
+            string commentText = match.Value.Trim();
+            _currentCommentListTemp.Add(commentText.Substring(1, commentText.Length - 1));
 
+            // Cut out the match itself, and not the trimmed comment text, so that the whitespace that
+            // belongs to the comment ("; comment   " ends with three spaces) does not stay in the value,
+            // while the whitespace in front of the comment does.
             string content = line.Remove(match.Index, match.Length);
             return String.IsNullOrWhiteSpace(content) ? String.Empty : content;
         }

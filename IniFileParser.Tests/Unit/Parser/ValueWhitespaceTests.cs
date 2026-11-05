@@ -46,6 +46,27 @@ namespace IniFileParser.Tests.Unit.Parser
             Assert.That(data["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
         }
 
+        [Test]
+        public void the_stored_comment_text_is_trimmed()
+        {
+            // A comment is not data: it is stored without the whitespace around it, which is why the
+            // comment character is the first character of what Substring(1) skips.
+            var configuration = new IniParserConfiguration
+            {
+                CommentRegex = new Regex(@"\s*;.*"),
+            };
+
+            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey=value ; a comment   \n");
+            Assert.That(data["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
+
+            var fullLine = new IniDataParser().Parse("[SECTION]\n; a comment   \nkey=value\n");
+            Assert.That(fullLine["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
+
+            // This expression starts at the whitespace in front of the comment, so that whitespace is
+            // part of the match and goes away with the comment. An expression like ";.*" leaves it in
+            // the value instead, which the_whitespace_of_the_comment_is_not_part_of_the_value pins down.
+            Assert.That(data["SECTION"]["key"], Is.EqualTo("value"));
+        }
 
         [Test]
         public void the_whitespace_of_the_comment_is_not_part_of_the_value()
