@@ -1,11 +1,7 @@
-# The code in this folder is vendored from ini-parser (MIT License, see LICENSE).
-# Keep it as close to upstream as possible, so instead of fixing the imported sources the
-# analyzer rules of this repository are disabled for this folder.
+root = true
 
 [*.cs]
 dotnet_analyzer_diagnostic.severity = none
-
-# Explicit settings, because a specific rule setting always wins over the bulk one above.
 dotnet_diagnostic.CA1002.severity = none
 dotnet_diagnostic.CA1031.severity = none
 dotnet_diagnostic.CA1032.severity = none

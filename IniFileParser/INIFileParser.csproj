@@ -1,12 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!--
-    Vendored copy of ini-parser 2.5.2 (MIT License, see LICENSE), taken from
-    https://github.com/rickyah/ini-parser at commit c4dbf0eed984b0d57841bd6288040a2d5250e66e.
-    The original project targets .NET Framework 2.0 only, so this SDK-style project
-    provides the netstandard2.0 build.
-  -->
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>INIFileParser</AssemblyName>
