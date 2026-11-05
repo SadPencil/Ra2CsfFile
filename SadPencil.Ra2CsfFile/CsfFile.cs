@@ -27,9 +27,55 @@ namespace SadPencil.Ra2CsfFile
         public IReadOnlyDictionary<String, String> Labels => this._labels;
 
         /// <summary>
-        /// The line break characters between the multiple lines in the label value.
+        /// The line break characters between the multiple lines in the label value. <br/>
+        /// Every label value that enters this class is normalized to this character by <see cref="NormalizeLineBreaks(String)"/>,
+        /// so a label value always uses it to separate the lines no matter which line break style the source used.
         /// </summary>
         public static String LineBreakCharacters { get; } = "\n";
+
+        /// <summary>
+        /// Replace every line break sequence of the input (a carriage return followed by a line feed, a run of carriage
+        /// returns followed by a line feed, or a lone carriage return) with <see cref="LineBreakCharacters"/>. <br/>
+        /// The number of lines is not changed: a run of carriage returns before a line feed is a single line break.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>The normalized string, or <c>null</c> if the input is <c>null</c>.</returns>
+        public static String NormalizeLineBreaks(String input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            if (input.IndexOf('\r') < 0)
+            {
+                // The common case: the value already uses this class's line break characters.
+                return input;
+            }
+
+            StringBuilder sb = new StringBuilder(input.Length);
+            for (Int32 i = 0; i < input.Length; i++)
+            {
+                if (input[i] != '\r')
+                {
+                    _ = sb.Append(input[i]);
+                    continue;
+                }
+
+                // Skip the rest of the carriage returns, and the line feed if there is one,
+                // so that a run of them becomes a single line break.
+                while (i + 1 < input.Length && input[i + 1] == '\r')
+                {
+                    i++;
+                }
+                if (i + 1 < input.Length && input[i + 1] == '\n')
+                {
+                    i++;
+                }
+                _ = sb.Append(LineBreakCharacters);
+            }
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// The language of this file.
@@ -44,7 +90,7 @@ namespace SadPencil.Ra2CsfFile
         public Int32 Version { get; set; } = 3;
         /// <summary>
         /// Add or replace a label to the string table. The label name will be checked. <br/>
-        /// If the label value contains multiple lines, use LineBreakCharacters to separate the line.
+        /// The label value is normalized to <see cref="LineBreakCharacters"/> by <see cref="NormalizeLineBreaks(String)"/>.
         /// </summary>
         /// <param name="labelName">The label name.</param>
         /// <param name="labelValue">The label value.</param>
@@ -55,6 +101,7 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception("Invalid characters found in label name.");
             }
+            labelValue = NormalizeLineBreaks(labelValue);
             if (this.Labels.ContainsKey(labelName))
             {
                 // because we have specified StringComparer.InvariantCultureIgnoreCase, we need to update the casing of the key.
