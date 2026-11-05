@@ -228,16 +228,20 @@ namespace IniParser.Parser
         ///     The string we want to remove the comments from.
         /// </param>
         /// <returns>
-        ///     The string s without comments. The whitespace before the comment is kept, so it stays part of the value;
-        ///     the result is empty only when the line held nothing but the comment.
+        ///     The string s without comments. The whitespace before the comment is kept, so it stays part of the value,
+        ///     while the whitespace that belongs to the comment is removed with it. The result is empty only when the
+        ///     line held nothing but the comment.
         /// </returns>
         protected virtual string ExtractComment(string line)
         {
-            string comment = Configuration.CommentRegex.Match(line).Value.Trim();
+            // Cut out the match itself instead of the trimmed comment text, so that the whitespace of
+            // the comment ("  ; comment   " ends with three spaces) does not survive in the value.
+            var match = Configuration.CommentRegex.Match(line);
+            string comment = match.Value.Trim();
 
             _currentCommentListTemp.Add(comment.Substring(1, comment.Length - 1));
 
-            string content = line.Replace(comment, "");
+            string content = line.Remove(match.Index, match.Length);
             return String.IsNullOrWhiteSpace(content) ? String.Empty : content;
         }
 

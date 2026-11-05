@@ -46,6 +46,21 @@ namespace IniFileParser.Tests.Unit.Parser
             Assert.That(data["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
         }
 
+
+        [Test]
+        public void the_whitespace_of_the_comment_is_not_part_of_the_value()
+        {
+            var configuration = new IniParserConfiguration
+            {
+                CommentRegex = new Regex(";.*"),
+            };
+
+            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey=value  ; a comment   \n");
+
+            Assert.That(data["SECTION"]["key"], Is.EqualTo("value  "));
+            Assert.That(data["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
+        }
+
         [Test]
         public void a_line_that_holds_nothing_but_a_comment_is_still_skipped()
         {
