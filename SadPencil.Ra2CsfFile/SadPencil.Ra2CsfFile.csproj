@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>sadpencil</Authors>
-    <AssemblyVersion>2.2.5</AssemblyVersion>
-    <FileVersion>2.2.5</FileVersion>
-    <Version>2.2.5</Version>
+    <AssemblyVersion>2.3.0</AssemblyVersion>
+    <FileVersion>2.3.0</FileVersion>
+    <Version>2.3.0</Version>
     <PackageProjectUrl>https://github.com/SadPencil/Ra2CsfFile</PackageProjectUrl>
     <Description>Load, edit, and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.</Description>
     <Copyright>Copyright © SadPencil 2021-2026</Copyright>
@@ -16,7 +16,7 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>update existing label with correct key case</PackageReleaseNotes>
+    <PackageReleaseNotes>preserve the whitespace of label values; write "key=value" without spaces around the equals sign; normalize the line breaks of label values to LF; drop the WhiteSpaceWarning key</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

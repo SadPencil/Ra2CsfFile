@@ -17,6 +17,7 @@ Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 ## Version History
 
 ```
+v2.3.0: preserve the whitespace of label values; write "key=value" without spaces around the equals sign; normalize the line breaks of label values to LF; drop the WhiteSpaceWarning key
 v2.2.5: update existing label with correct key case
 v2.2.4: add trimmable line warning comment when generating an ini file
 v2.2.3: ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"
