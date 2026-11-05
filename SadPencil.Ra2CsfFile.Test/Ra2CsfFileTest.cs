@@ -141,6 +141,42 @@ namespace SadPencil.Ra2CsfFile.Test
             Assert.IsTrue(iniText.IndexOf("Value=abc   ", StringComparison.Ordinal) >= 0, "The trailing whitespace of the label value must be preserved.");
         }
 
+
+        [TestMethod]
+        public void TestIniLineBreakStyleDoesNotAffectTheLoadedValues()
+        {
+            // The writer uses Environment.NewLine, so the same string table produces CRLF on Windows and LF
+            // elsewhere. Reading the file must not care: both are the line separator of the ini file, and
+            // neither may end up inside a value.
+            const String content =
+                "[SadPencil.Ra2CsfFile.Ini]\nIniVersion=2\nCsfVersion=3\nCsfLang=0\n\n" +
+                "[MULTI]\nValue=first\nValueLine2=   second   \n\n" +
+                "[EMPTYLINE]\nValue=a\nValueLine2=\nValueLine3=b\n";
+            String crlfContent = String.Join("\r\n", content.Split('\n'));
+
+            CsfFile fromLf;
+            using (MemoryStream ms = new(Encoding.UTF8.GetBytes(content)))
+            {
+                fromLf = CsfFileIniHelper.LoadFromIniFile(ms);
+            }
+
+            CsfFile fromCrlf;
+            using (MemoryStream ms = new(Encoding.UTF8.GetBytes(crlfContent)))
+            {
+                fromCrlf = CsfFileIniHelper.LoadFromIniFile(ms);
+            }
+
+            Assert.AreEqual("first\n   second   ", fromLf.Labels["MULTI"]);
+            Assert.AreEqual("a\n\nb", fromLf.Labels["EMPTYLINE"]);
+
+            Assert.AreEqual(fromLf.Labels.Count, fromCrlf.Labels.Count);
+            foreach (KeyValuePair<String, String> label in fromLf.Labels)
+            {
+                Assert.AreEqual(label.Value, fromCrlf.Labels[label.Key],
+                    $"The label {label.Key} depends on the line break style of the ini file.");
+            }
+        }
+
         [TestMethod]
         public void TestNormalizeLineBreaks()
         {
