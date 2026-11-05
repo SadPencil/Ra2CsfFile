@@ -228,7 +228,8 @@ namespace IniParser.Parser
         ///     The string we want to remove the comments from.
         /// </param>
         /// <returns>
-        ///     The string s without comments. The result is trimmed, so the whitespace before the comment is removed as well.
+        ///     The string s without comments. The whitespace before the comment is kept, so it stays part of the value;
+        ///     the result is empty only when the line held nothing but the comment.
         /// </returns>
         protected virtual string ExtractComment(string line)
         {
@@ -236,7 +237,8 @@ namespace IniParser.Parser
 
             _currentCommentListTemp.Add(comment.Substring(1, comment.Length - 1));
 
-            return line.Replace(comment, "").Trim();
+            string content = line.Replace(comment, "");
+            return String.IsNullOrWhiteSpace(content) ? String.Empty : content;
         }
 
         /// <summary>
@@ -247,7 +249,7 @@ namespace IniParser.Parser
         protected virtual void ProcessLine(string currentLine, IniData currentIniData)
         {
             // Trailing whitespace belongs to the value; indentation before the key does not.
-            // A comment is stripped together with the whitespace around it, see ExtractComment.
+            // A comment is stripped, but the whitespace before it stays part of the value, see ExtractComment.
             currentLine = currentLine.TrimStart();
 
             // Extract comments from current line and store them in a tmp field

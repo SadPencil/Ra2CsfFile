@@ -1,4 +1,6 @@
 using System;
+using System.Text.RegularExpressions;
+using IniParser.Model.Configuration;
 using IniParser.Parser;
 using NUnit.Framework;
 
@@ -28,6 +30,33 @@ namespace IniFileParser.Tests.Unit.Parser
             var data = new IniDataParser().Parse(" \t[ TEST ] \t\r\n" + line);
 
             Assert.That(data["TEST"]["Value"], Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void preserve_value_whitespace_before_an_inline_comment()
+        {
+            var configuration = new IniParserConfiguration
+            {
+                CommentRegex = new Regex(";.*"),
+            };
+
+            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey = value   ; a comment\n");
+
+            Assert.That(data["SECTION"]["key"], Is.EqualTo(" value   "));
+            Assert.That(data["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
+        }
+
+        [Test]
+        public void a_line_that_holds_nothing_but_a_comment_is_still_skipped()
+        {
+            var configuration = new IniParserConfiguration
+            {
+                CommentRegex = new Regex(";.*"),
+            };
+
+            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey = value\n   ; a comment   \n");
+
+            Assert.That(data["SECTION"].Count, Is.EqualTo(1));
         }
 
         [Test]
