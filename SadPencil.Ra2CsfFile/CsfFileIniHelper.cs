@@ -57,7 +57,7 @@ namespace SadPencil.Ra2CsfFile
         }
 
         /// <summary>
-        /// Load an existing ini file that represent the stringtable, preserving each value line's leading and trailing whitespace.
+        /// Load an existing ini file that represent the stringtable.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
         /// <remarks>
@@ -66,7 +66,7 @@ namespace SadPencil.Ra2CsfFile
         /// </remarks>
         public static CsfFile LoadFromIniFile(Stream stream) => LoadFromIniFile(stream, new CsfFileOptions());
         /// <summary>
-        /// Load an existing ini file that represent the stringtable, preserving each value line's leading and trailing whitespace.
+        /// Load an existing ini file that represent the stringtable.
         /// </summary>
         /// <param name="stream">The file stream of an ini file.</param>
         /// <param name="options">The CsfFileOptions.</param>
