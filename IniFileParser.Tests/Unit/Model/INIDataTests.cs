@@ -84,15 +84,15 @@ key2=3
 
         // keys should all be retrieved
         Assert.IsTrue(data.TryGetKey("global", out result));
-        Assert.AreEqual("1", result);
+        Assert.AreEqual(result, "1");
         
         key = string.Format("section1{0}key1", separator);
         Assert.IsTrue(data.TryGetKey(key, out result));
-        Assert.AreEqual("2", result);
+        Assert.AreEqual(result, "2");
         
         key = string.Format(@"section1\subsection{0}key2", separator);
         Assert.IsTrue(data.TryGetKey(key, out result));
-        Assert.AreEqual("3", result);
+        Assert.AreEqual(result, "3");
 
         // invalid keys should fail...
         Assert.IsFalse(data.TryGetKey(null, out result));
@@ -124,10 +124,10 @@ key=2
 
         // should succeed
         key = "global";
-        Assert.AreEqual("1", data.GetKey(key));
+        Assert.AreEqual(data.GetKey(key), "1");
 
         key = string.Format("section{0}key", separator);
-        Assert.AreEqual("2", data.GetKey(key));
+        Assert.AreEqual(data.GetKey(key), "2");
 
         // should fail
         key = null;

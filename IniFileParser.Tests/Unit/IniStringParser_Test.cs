@@ -16,7 +16,7 @@ key1=value1
 key2=value5
 [section2]
 ;comment for myKey1 
-mykey1=value1
+mykey1=value1 
 ";
         [Test]
         public void parse_ini_string_with_default_configuration()

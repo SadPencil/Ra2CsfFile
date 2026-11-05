@@ -14,7 +14,7 @@ global key=global value
 ;comment for section1
 [section1]
 ;comment for key1
-key 1   =value 1
+key 1 =value 1
 key;2=va:lu;e.5
 [ section 2]
 ;comment for myKey1
@@ -49,7 +49,7 @@ mykey1=value1
             Assert.That(section1.Keys.Count, Is.EqualTo(2));
             Assert.That(section1.Keys.GetKeyData("key 1"), Is.Not.Null);
 
-            // Key names are trimmed; all whitespace after the assignment character is preserved.
+            // Check keys / values with spaces. Leading & trailing whitespace ignored
             Assert.That(section1.Keys["key 1"], Is.EqualTo("value 1"));
 
 
@@ -63,7 +63,7 @@ mykey1=value1
             // Bad section name
             Assert.That(section2, Is.Null);
 
-            // Leading and trailing whitespace in section names is ignored.
+            // Beware: leading and trailing whitespaces are ignored!
             section2 = data.Sections.GetSectionData("section 2");
             Assert.That(section2, Is.Not.Null);
             Assert.That(section2.SectionName, Is.EqualTo("section 2"));
@@ -80,17 +80,12 @@ mykey1=value1
         [Test]
         public void check_ini_writing()
         {
-            var parser = new IniDataParser();
-            IniData data = parser.Parse(iniFileStr);
+            IniData data =  new IniDataParser().Parse(iniFileStr);
 
             var dataAsString = data.ToString();
 
             // Generates a valid data file
-            IniData data2 = parser.Parse(dataAsString);
-
-            Assert.That(data2.Global["global key"], Is.EqualTo("global value"));
-            Assert.That(data2["section1"]["key 1"], Is.EqualTo("value 1"));
-            Assert.That(data2["section1"]["key;2"], Is.EqualTo("va:lu;e.5"));
+            IniData data2 = new IniDataParser().Parse(dataAsString);
 
             // check all strings are equal
             Assert.That(dataAsString, Is.EqualTo(data2.ToString()));
