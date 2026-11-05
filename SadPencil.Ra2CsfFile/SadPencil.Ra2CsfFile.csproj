@@ -20,13 +20,25 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- The ini parser is a private project reference: its assembly must be shipped inside this
+         package, but it must not become a package dependency, since it is not published. -->
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeVendoredIniParserInPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
   <ItemGroup>
-    <!-- Warning: there are no source codes, changelogs, or author's confirmation on version 2.5.3. Avoid upgrading to version 2.5.3! -->
-    <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
+    <ProjectReference Include="..\IniFileParser\INIFileParser.csproj" PrivateAssets="All" />
+    <None Include="..\IniFileParser\LICENSE" Pack="true" PackagePath="third-party\ini-parser\" />
     <PackageReference Include="NaturalStringExtensions" Version="3.0.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
   </ItemGroup>
+
+  <Target Name="IncludeVendoredIniParserInPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget','ProjectReference'))" />
+    </ItemGroup>
+  </Target>
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
