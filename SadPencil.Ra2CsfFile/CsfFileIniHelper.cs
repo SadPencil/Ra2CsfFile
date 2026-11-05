@@ -192,7 +192,7 @@ namespace SadPencil.Ra2CsfFile
                 csfLabels = csfLabels.OrderBy(csfLabel => csfLabel.Key, NaturalStringComparer.InvariantCultureIgnoreCase);
             }
 
-            foreach (var labelNameValues in csf.Labels)
+            foreach (var labelNameValues in csfLabels)
             {
                 String labelName = labelNameValues.Key;
                 String labelValue = labelNameValues.Value;
