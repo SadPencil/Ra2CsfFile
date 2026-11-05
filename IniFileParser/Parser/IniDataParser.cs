@@ -228,17 +228,15 @@ namespace IniParser.Parser
         ///     The string we want to remove the comments from.
         /// </param>
         /// <returns>
-        ///     The string s without comments. The whitespace before the comment is kept, so it stays part of the value,
-        ///     while the whitespace that belongs to the comment is removed with it. The result is empty only when the
-        ///     line held nothing but the comment. The stored comment text keeps the whitespace of the line as well.
+        ///     The string s without comments.
         /// </returns>
         protected virtual string ExtractComment(string line)
         {
             var match = Configuration.CommentRegex.Match(line);
 
-            // The comment text is stored as it is written, whitespace included. Only the comment string
-            // is dropped, and it is looked up inside the match because an expression such as "\s*;.*"
-            // also matches the whitespace in front of it, and a comment string can be longer than one
+            // Drop the comment string and keep everything after it. Look the comment string up inside
+            // the match instead of dropping the first character: an expression such as "\s*;.*" also
+            // matches the whitespace in front of it, and a comment string can be longer than one
             // character ("//" for instance).
             string matchedComment = match.Value;
             Int32 commentIndex = matchedComment.IndexOf(Configuration.CommentString, StringComparison.Ordinal);
@@ -271,7 +269,6 @@ namespace IniParser.Parser
         protected virtual void ProcessLine(string currentLine, IniData currentIniData)
         {
             // Trailing whitespace belongs to the value; indentation before the key does not.
-            // A comment is stripped, but the whitespace before it stays part of the value, see ExtractComment.
             currentLine = currentLine.TrimStart();
 
             // Extract comments from current line and store them in a tmp field
@@ -416,7 +413,7 @@ namespace IniParser.Parser
         ///     The string to be processed, which contains a key/value pair
         /// </param>
         /// <returns>
-        ///     The name of the extracted value, with the whitespace after the assignment character kept as it is.
+        ///     The name of the extracted value.
         /// </returns>
         protected virtual string ExtractValue(string s)
         {
