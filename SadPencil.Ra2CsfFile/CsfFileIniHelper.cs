@@ -233,12 +233,5 @@ namespace SadPencil.Ra2CsfFile
                 sw.Write(ini.ToString());
             }
         }
-
-        /// <summary>
-        /// Trim each line's leading and trailing whitespace characters in a multi-line string.
-        /// </summary>
-        /// <param name="input">The input multi-line string.</param>
-        /// <returns>The trimmed multi-line string.</returns>
-        public static String TrimMultiLine(String input) => input is null ? null : String.Join(CsfFile.LineBreakCharacters, input.Split(new String[] { CsfFile.LineBreakCharacters }, StringSplitOptions.None).Select(l => l.Trim()));
     }
 }

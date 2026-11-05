@@ -18,7 +18,7 @@ The vendored ini-parser sources in `IniFileParser/` are patched; see `IniFilePar
 ## Version History
 
 ```
-v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files
+v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine
 v2.2.5: update existing label with correct key case
 v2.2.4: add trimmable line warning comment when generating an ini file
 v2.2.3: ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"

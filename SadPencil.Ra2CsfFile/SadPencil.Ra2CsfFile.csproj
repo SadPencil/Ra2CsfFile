@@ -16,7 +16,7 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files</PackageReleaseNotes>
+    <PackageReleaseNotes>preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
