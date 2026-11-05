@@ -17,10 +17,13 @@ this list up to date when the sources are updated from upstream.
 - `ProcessLine` trims the start of a line only (`TrimStart` instead of `Trim`), so the trailing
   whitespace of a line is not dropped.
 - `ExtractValue` returns everything after the first assignment character without trimming it.
-- `ExtractComment` removes the comment but keeps the whitespace before it, so that whitespace stays part
-  of the value. A line that holds nothing but the comment still counts as empty. The default
-  configuration only accepts a comment on a line of its own, so this matters only for a configuration
-  with an inline comment expression.
+- `ExtractComment` keeps the whitespace around a comment instead of trimming it: the whitespace in
+  front of the comment stays part of the value, the whitespace that belongs to the comment goes away
+  with it, and the comment text that is stored keeps the whitespace of the line as well. Only the
+  comment string is dropped, and it is looked up inside the match, so an expression such as
+  `\s*;.*` and a comment string longer than one character both work. A line that holds nothing but
+  the comment still counts as empty. The default configuration only accepts a comment on a line of
+  its own, so the value part of this matters only with an inline comment expression.
 
 A string table label value may end with a space that the game displays, and an empty label can be a
 single space, so trimming it would change the string table itself. The consequence for an ini file

@@ -230,22 +230,35 @@ namespace IniParser.Parser
         /// <returns>
         ///     The string s without comments. The whitespace before the comment is kept, so it stays part of the value,
         ///     while the whitespace that belongs to the comment is removed with it. The result is empty only when the
-        ///     line held nothing but the comment.
+        ///     line held nothing but the comment. The stored comment text keeps the whitespace of the line as well.
         /// </returns>
         protected virtual string ExtractComment(string line)
         {
             var match = Configuration.CommentRegex.Match(line);
 
-            // The comment text is stored without the whitespace of the match: an expression such as
-            // "\s*;.*" includes the whitespace in front of the comment character, and a comment line
-            // usually ends with some. Substring(1) then drops the comment character itself, which has
-            // to be the first character of what we store.
-            string commentText = match.Value.Trim();
-            _currentCommentListTemp.Add(commentText.Substring(1, commentText.Length - 1));
+            // The comment text is stored as it is written, whitespace included. Only the comment string
+            // is dropped, and it is looked up inside the match because an expression such as "\s*;.*"
+            // also matches the whitespace in front of it, and a comment string can be longer than one
+            // character ("//" for instance).
+            string matchedComment = match.Value;
+            Int32 commentIndex = matchedComment.IndexOf(Configuration.CommentString, StringComparison.Ordinal);
+            if (commentIndex >= 0)
+            {
+                _currentCommentListTemp.Add(matchedComment.Substring(commentIndex + Configuration.CommentString.Length));
+            }
+            else
+            {
+                // The expression does not contain the comment string: keep the text without its first character.
+                string trimmedStart = matchedComment.TrimStart();
+                if (trimmedStart.Length > 0)
+                {
+                    _currentCommentListTemp.Add(trimmedStart.Substring(1));
+                }
+            }
 
-            // Cut out the match itself, and not the trimmed comment text, so that the whitespace that
-            // belongs to the comment ("; comment   " ends with three spaces) does not stay in the value,
-            // while the whitespace in front of the comment does.
+            // Cut out the match itself, and not the comment text, so that the whitespace that belongs to
+            // the comment ("; comment   " ends with three spaces) does not stay in the value, while the
+            // whitespace in front of the comment does.
             string content = line.Remove(match.Index, match.Length);
             return String.IsNullOrWhiteSpace(content) ? String.Empty : content;
         }
