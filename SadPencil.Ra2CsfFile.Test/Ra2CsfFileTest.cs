@@ -186,6 +186,8 @@ namespace SadPencil.Ra2CsfFile.Test
             Assert.AreEqual("a\nb", CsfFile.NormalizeLineBreaks("a\r\r\nb"));
             // A lone carriage return is a line break too.
             Assert.AreEqual("a\nb", CsfFile.NormalizeLineBreaks("a\rb"));
+            // Consecutive carriage returns without a line feed are separate line breaks, so an empty line stays empty.
+            Assert.AreEqual("a\n\nb", CsfFile.NormalizeLineBreaks("a\r\rb"));
             // The end of the value is handled as well, not only the inner line breaks.
             Assert.AreEqual("a\nb\n", CsfFile.NormalizeLineBreaks("a\r\nb\r\n"));
             // Two line breaks stay two line breaks.

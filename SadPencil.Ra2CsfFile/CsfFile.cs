@@ -34,9 +34,12 @@ namespace SadPencil.Ra2CsfFile
         public static String LineBreakCharacters { get; } = "\n";
 
         /// <summary>
-        /// Replace every line break sequence of the input (a carriage return followed by a line feed, a run of carriage
-        /// returns followed by a line feed, or a lone carriage return) with <see cref="LineBreakCharacters"/>. <br/>
-        /// The number of lines is not changed: a run of carriage returns before a line feed is a single line break.
+        /// Replace every line break sequence of the input with <see cref="LineBreakCharacters"/>: a line feed, a carriage
+        /// return followed by a line feed, a carriage return on its own, and a run of carriage returns followed by a line
+        /// feed. <br/>
+        /// The number of lines is not changed. A run of carriage returns that ends in a line feed counts as a single line
+        /// break, since the extra carriage returns of a sequence like <c>\r\r\n</c> are a stray character, while carriage
+        /// returns that are not followed by a line feed are line breaks of their own.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>The normalized string, or <c>null</c> if the input is <c>null</c>.</returns>
@@ -61,17 +64,28 @@ namespace SadPencil.Ra2CsfFile
                     continue;
                 }
 
-                // Skip the rest of the carriage returns, and the line feed if there is one,
-                // so that a run of them becomes a single line break.
+                Int32 carriageReturnCount = 1;
                 while (i + 1 < input.Length && input[i + 1] == '\r')
                 {
                     i++;
+                    carriageReturnCount++;
                 }
+
                 if (i + 1 < input.Length && input[i + 1] == '\n')
                 {
+                    // A run of carriage returns that ends in a line feed is a single line break.
                     i++;
+                    _ = sb.Append(LineBreakCharacters);
                 }
-                _ = sb.Append(LineBreakCharacters);
+                else
+                {
+                    // Without a line feed every carriage return is a line break of its own, so that an
+                    // empty line of a value with carriage return line breaks stays an empty line.
+                    for (Int32 j = 0; j < carriageReturnCount; j++)
+                    {
+                        _ = sb.Append(LineBreakCharacters);
+                    }
+                }
             }
 
             return sb.ToString();
