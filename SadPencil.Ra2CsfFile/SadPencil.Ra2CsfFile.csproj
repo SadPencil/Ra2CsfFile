@@ -27,9 +27,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- The upstream ini-parser 2.5.2 sources are vendored in ../IniFileParser as a separate
-         project so the parser can be built and maintained in this repository.
-         See ../IniFileParser/INIFileParser.csproj for the source revision and ../IniFileParser/LICENSE for the MIT license. -->
     <ProjectReference Include="..\IniFileParser\INIFileParser.csproj" PrivateAssets="All" />
     <None Include="..\IniFileParser\LICENSE" Pack="true" PackagePath="third-party\ini-parser\" />
     <PackageReference Include="NaturalStringExtensions" Version="3.0.0" />
