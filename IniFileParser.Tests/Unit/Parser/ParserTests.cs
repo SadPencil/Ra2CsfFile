@@ -15,13 +15,13 @@ namespace IniFileParser.Tests.Unit.Parser
 [section1]
 
 ;comment for key1
-key1 = value1
-key2 = value5
+key1=value1
+key2=value5
 
 [section2]
 
 ;comment for myKey1
-mykey1 = value1
+mykey1=value1
 ";
    
         [Test]
@@ -52,13 +52,13 @@ mykey1 = value1
 <section1>
 
 #comment for key1
-key1 = value1
-key2 = value5
+key1=value1
+key2=value5
 
 <section2>
 
 #comment for myKey1
-mykey1 = value1
+mykey1=value1
 "; 
        
         [Test]
@@ -96,7 +96,8 @@ mykey1 = value1
         {
             IniData data =  new IniDataParser().Parse(iniFileStr);
 
-            Assert.That(data.ToString(), Is.EqualTo(iniFileStr));
+            // Writing reproduces the source file, ignoring the line break style of the platform.
+            Assert.That(data.ToString().Replace("\r\n", "\n"), Is.EqualTo(iniFileStr.Replace("\r\n", "\n")));
         }
                 
         [Test, Description("Test for Issue 3: http://code.google.com/p/ini-parser/issues/detail?id=3")]
@@ -119,8 +120,8 @@ mykey1 = value1
 ;comentario 2
 
 ;valor de control
-value1 = 10.6
-value1 = 10";
+value1=10.6
+value1=10";
 
 
             var parser = new IniDataParser();
@@ -140,7 +141,7 @@ value1 = 10";
             string data = 
                 @"[test]
 # a comment
-connectionString = Server=sqlserver.domain.com;Database=main;User ID=user;Password=password";
+connectionString=Server=sqlserver.domain.com;Database=main;User ID=user;Password=password";
 
 
             var parser = new IniDataParser();
@@ -160,7 +161,7 @@ connectionString = Server=sqlserver.domain.com;Database=main;User ID=user;Passwo
         {
             string data = 
                 @"[http://example.com/page] 
-key1 = value1";
+key1=value1";
 
             var newData = new IniDataParser().Parse(data);
 
@@ -217,7 +218,7 @@ key4=value4";
         {
             string data =
                 @"[{E3729302-74D1-11D3-B43A-00AA00CAD128}]
-key = value";
+key=value";
 
             var parser = new IniDataParser();
 
@@ -234,7 +235,7 @@ key = value";
         {
             string data =
                 @"[Web Colaboration]
-key = value";
+key=value";
 
             var parser = new IniDataParser();
 
@@ -262,8 +263,8 @@ key1 = value1";
         {
             string data =
                 @"win] 
-key1 = value1
- = value2";
+key1=value1
+=value2";
 
             var parser = new IniDataParser();
 

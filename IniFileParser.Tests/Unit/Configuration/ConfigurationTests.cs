@@ -41,30 +41,30 @@ namespace IniFileParser.Tests.Unit.Configuration
 
         string iniFileStr =
 @"
-cyberdreams = i have no section, and i must scream
+cyberdreams=i have no section, and i must scream
 
 #comment for stage1
 <stage1>
-name = Green Hill Zone
-this_is_not_a_comment = ;no comment
+name=Green Hill Zone
+this_is_not_a_comment=;no comment
 
 <stage2>
 # comment name
-name = Marble Zone
+name=Marble Zone
 ";
 
         string iniFileStrNotSoGood =
 @"
-cyberdreams = i have no section, and i must scream
+cyberdreams=i have no section, and i must scream
 
 #comment for stage1
 [stage1]
-name = Green Hill Zone
-this_is_not_a_comment = ;no comment
+name=Green Hill Zone
+this_is_not_a_comment=;no comment
 
 [stage2]
 # comment name
-name = Marble Zone
+name=Marble Zone
 ";
 
         #endregion 
@@ -79,8 +79,8 @@ name = Marble Zone
         public void simple_configuration()
         {
             var iniStr = @"[section1]
-#data = 1
-;data = 2";
+#data=1
+;data=2";
 
             var config = new IniParserConfiguration();
 
@@ -147,8 +147,8 @@ name = Marble Zone
             IniData data = new IniDataParser(new LiberalTestConfiguration()).Parse(iniFileStr);
 
             Assert.That(
-                data.ToString().Replace(Environment.NewLine, string.Empty), 
-                Is.EqualTo(iniFileStr.Replace(Environment.NewLine, string.Empty)));
+                data.ToString().Replace("\r", string.Empty).Replace("\n", string.Empty),
+                Is.EqualTo(iniFileStr.Replace("\r", string.Empty).Replace("\n", string.Empty)));
         }
 
         [Test]
@@ -160,7 +160,7 @@ name = Marble Zone
 
             Assert.That(
                 data.ToString().Replace("^_^", string.Empty), 
-                Is.EqualTo(iniFileStr.Replace(Environment.NewLine, string.Empty)));
+                Is.EqualTo(iniFileStr.Replace("\r", string.Empty).Replace("\n", string.Empty)));
         }
 
         [Test]
@@ -174,6 +174,28 @@ name = Marble Zone
             parser.Configuration.CommentString = @"\";
 
             parser.Parse(iniStr);
+        }
+
+
+        [Test]
+        public void comment_text_of_an_escaped_marker()
+        {
+            // The marker is stored with the escape that the regular expression needs, so a UNC path in
+            // the same line must not be taken for the marker.
+            var parser = new IniDataParser();
+            parser.Configuration.CommentString = @"\";
+
+            var iniData = parser.Parse("[section]\n" + @"\ See \\server\share" + "\nkey=value\n");
+
+            Assert.That(iniData["section"].GetKeyData("key").Comments[0], Is.EqualTo(@" See \\server\share"));
+
+            // The same for a marker of more than one character that contains a special character.
+            var multiCharParser = new IniDataParser();
+            multiCharParser.Configuration.CommentString = "**";
+
+            var multiCharData = multiCharParser.Parse("[section]\n** a comment\nkey=value\n");
+
+            Assert.That(multiCharData["section"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
         }
 
         [Test]

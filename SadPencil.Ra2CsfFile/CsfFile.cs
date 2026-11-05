@@ -27,9 +27,69 @@ namespace SadPencil.Ra2CsfFile
         public IReadOnlyDictionary<String, String> Labels => this._labels;
 
         /// <summary>
-        /// The line break characters between the multiple lines in the label value.
+        /// The line break characters between the multiple lines in the label value. <br/>
+        /// Every label value that enters this class is normalized to this character by <see cref="NormalizeLineBreaks(String)"/>,
+        /// so a label value always uses it to separate the lines no matter which line break style the source used.
         /// </summary>
         public static String LineBreakCharacters { get; } = "\n";
+
+        /// <summary>
+        /// Replace every line break sequence of the input with <see cref="LineBreakCharacters"/>: a line feed, a carriage
+        /// return followed by a line feed, a carriage return on its own, and a run of carriage returns followed by a line
+        /// feed. <br/>
+        /// The number of lines is not changed. A run of carriage returns that ends in a line feed counts as a single line
+        /// break, since the extra carriage returns of a sequence like <c>\r\r\n</c> are a stray character, while carriage
+        /// returns that are not followed by a line feed are line breaks of their own.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>The normalized string, or <c>null</c> if the input is <c>null</c>.</returns>
+        public static String NormalizeLineBreaks(String input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            if (input.IndexOf('\r') < 0)
+            {
+                // The common case: the value already uses this class's line break characters.
+                return input;
+            }
+
+            StringBuilder sb = new StringBuilder(input.Length);
+            for (Int32 i = 0; i < input.Length; i++)
+            {
+                if (input[i] != '\r')
+                {
+                    _ = sb.Append(input[i]);
+                    continue;
+                }
+
+                Int32 carriageReturnCount = 1;
+                while (i + 1 < input.Length && input[i + 1] == '\r')
+                {
+                    i++;
+                    carriageReturnCount++;
+                }
+
+                if (i + 1 < input.Length && input[i + 1] == '\n')
+                {
+                    // A run of carriage returns that ends in a line feed is a single line break.
+                    i++;
+                    _ = sb.Append(LineBreakCharacters);
+                }
+                else
+                {
+                    // Without a line feed every carriage return is a line break of its own, so that an
+                    // empty line of a value with carriage return line breaks stays an empty line.
+                    for (Int32 j = 0; j < carriageReturnCount; j++)
+                    {
+                        _ = sb.Append(LineBreakCharacters);
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// The language of this file.
@@ -44,7 +104,7 @@ namespace SadPencil.Ra2CsfFile
         public Int32 Version { get; set; } = 3;
         /// <summary>
         /// Add or replace a label to the string table. The label name will be checked. <br/>
-        /// If the label value contains multiple lines, use LineBreakCharacters to separate the line.
+        /// The label value is normalized to <see cref="LineBreakCharacters"/> by <see cref="NormalizeLineBreaks(String)"/>.
         /// </summary>
         /// <param name="labelName">The label name.</param>
         /// <param name="labelValue">The label value.</param>
@@ -55,6 +115,7 @@ namespace SadPencil.Ra2CsfFile
             {
                 throw new Exception("Invalid characters found in label name.");
             }
+            labelValue = NormalizeLineBreaks(labelValue);
             if (this.Labels.ContainsKey(labelName))
             {
                 // because we have specified StringComparer.InvariantCultureIgnoreCase, we need to update the casing of the key.

@@ -70,12 +70,12 @@ value1 = 10.6";
       public void TryGetKey_data_retrieval()
       {
         var input = @"
-global = 1
+global=1
 [section1]
-key1 = 2
+key1=2
 
 [section1\subsection]
-key2 = 3
+key2=3
 ";
         var data = new IniDataParser().Parse(input);
         var separator = data.SectionKeySeparator;
@@ -114,9 +114,9 @@ key2 = 3
       public void GeyKey_data_retrieval()
       {
         var input = @"
-global = 1
+global=1
 [section]
-key = 2
+key=2
 ";
         var data = new IniDataParser().Parse(input);
         var separator = data.SectionKeySeparator;
@@ -144,9 +144,9 @@ key = 2
         public void check_deep_clone()
         {
             var input = @"
-global = 1
+global=1
 [section]
-key = 1
+key=1
 ";
             var ori = new IniDataParser().Parse(input);
 

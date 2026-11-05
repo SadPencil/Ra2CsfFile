@@ -1,4 +1,5 @@
-﻿using IniParser;
+﻿using System;
+using IniParser;
 using IniParser.Model;
 using NUnit.Framework;
 
@@ -14,7 +15,6 @@ namespace IniFileParser.Tests.Unit.Parser
             var data = new IniData();
             data.Sections.AddSection("section1");
             data["section1"].AddKey("key1", "value1");
-            data.Configuration.AssigmentSpacer = "";
 
             var parser = new StreamIniDataParser();
             string tempPath = System.IO.Path.GetTempFileName();
@@ -23,9 +23,8 @@ namespace IniFileParser.Tests.Unit.Parser
                 parser.WriteData(sw, data);
             }
 
-            Assert.AreEqual(@"[section1]
-key1=value1
-", System.IO.File.ReadAllText(tempPath));
+            String expected = "[section1]" + Environment.NewLine + "key1=value1" + Environment.NewLine;
+            Assert.AreEqual(expected, System.IO.File.ReadAllText(tempPath));
         }
 
     }

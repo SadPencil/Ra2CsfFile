@@ -92,12 +92,13 @@ namespace IniParser.Model.Formatting
                 // Write key comments
                 WriteComments(keyData.Comments, sb);
 
-                //Write key and value
-                sb.Append(string.Format("{0}{3}{1}{3}{2}{4}", 
+                //Write key and value.
+                //No whitespace is inserted around the assignment character on purpose: the value is
+                //written exactly as it is stored, so parsing and formatting round trips stay stable.
+                sb.Append(string.Format("{0}{1}{2}{3}",
                     keyData.KeyName,
                     Configuration.KeyValueAssigmentChar, 
                     keyData.Value, 
-                    Configuration.AssigmentSpacer, 
                     Configuration.NewLineStr));
             }
         }

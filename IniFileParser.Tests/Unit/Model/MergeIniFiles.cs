@@ -33,24 +33,24 @@ namespace IniFileParser.Tests.Unit.Model
 
         string iniFileStrA =
 @"
-g = 1
+g=1
 [s0]
-a = 2
+a=2
 [s1]
-a = 3
-b = 4
+a=3
+b=4
 ";
 
         string iniFileStrB =
 @"
-g = 11
-j = a
+g=11
+j=a
 [s0]
-a = 22
-b = 44
+a=22
+b=44
 
 [s2]
-c = 55
+c=55
 ";
 
         [Test]

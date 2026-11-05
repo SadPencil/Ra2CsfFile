@@ -4,6 +4,7 @@ using IniParser.Exceptions;
 using IniParser.Model;
 using IniParser.Model.Configuration;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace IniParser.Parser
 {
@@ -232,11 +233,39 @@ namespace IniParser.Parser
         /// </returns>
         protected virtual string ExtractComment(string line)
         {
-            string comment = Configuration.CommentRegex.Match(line).Value.Trim();
+            var match = Configuration.CommentRegex.Match(line);
 
-            _currentCommentListTemp.Add(comment.Substring(1, comment.Length - 1));
+            // Drop the comment string and keep everything after it. Look the comment string up inside
+            // the match instead of dropping the first character: an expression such as "\s*;.*" also
+            // matches the whitespace in front of it, and a comment string can be longer than one
+            // character ("//" for instance).
+            string matchedComment = match.Value;
 
-            return line.Replace(comment, "").Trim();
+            // The configuration keeps the comment string with the characters that are special to a
+            // regular expression escaped, so unescape it before looking it up in the line: a marker
+            // such as "\" is stored as "\\" and would otherwise be found in a UNC path like
+            // "\\server\share" instead of at the start of the comment.
+            string commentString = Regex.Unescape(Configuration.CommentString);
+            Int32 commentIndex = commentString.Length == 0 ? -1 : matchedComment.IndexOf(commentString, StringComparison.Ordinal);
+            if (commentIndex >= 0)
+            {
+                _currentCommentListTemp.Add(matchedComment.Substring(commentIndex + commentString.Length));
+            }
+            else
+            {
+                // The expression does not contain the comment string: keep the text without its first character.
+                string trimmedStart = matchedComment.TrimStart();
+                if (trimmedStart.Length > 0)
+                {
+                    _currentCommentListTemp.Add(trimmedStart.Substring(1));
+                }
+            }
+
+            // Cut out the match itself, and not the comment text, so that the whitespace that belongs to
+            // the comment ("; comment   " ends with three spaces) does not stay in the value, while the
+            // whitespace in front of the comment does.
+            string content = line.Remove(match.Index, match.Length);
+            return String.IsNullOrWhiteSpace(content) ? String.Empty : content;
         }
 
         /// <summary>
@@ -246,7 +275,8 @@ namespace IniParser.Parser
         /// <param name="currentLine">The string with the line to process</param>
         protected virtual void ProcessLine(string currentLine, IniData currentIniData)
         {
-            currentLine = currentLine.Trim();
+            // Trailing whitespace belongs to the value; indentation before the key does not.
+            currentLine = currentLine.TrimStart();
 
             // Extract comments from current line and store them in a tmp field
             if (LineContainsAComment(currentLine))
@@ -396,7 +426,7 @@ namespace IniParser.Parser
         {
             int index = s.IndexOf(Configuration.KeyValueAssigmentChar, 0);
 
-            return s.Substring(index + 1, s.Length - index - 1).Trim();
+            return s.Substring(index + 1, s.Length - index - 1);
         }
 
         /// <summary>

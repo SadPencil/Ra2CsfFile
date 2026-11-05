@@ -10,15 +10,15 @@ namespace IniFileParser.Tests.Unit.Parser
 
         string iniFileStr =
 @"
-global key = global value
+global key=global value
 ;comment for section1
 [section1]
 ;comment for key1
-key 1 =      value 1
-key;2 = va:lu;e.5
+key 1 =value 1
+key;2=va:lu;e.5
 [ section 2]
 ;comment for myKey1
-mykey1 = value1
+mykey1=value1
 ;comment for section2
 ";
 
@@ -82,12 +82,10 @@ mykey1 = value1
         {
             IniData data =  new IniDataParser().Parse(iniFileStr);
 
-            // ini file string with not-needed whitespace trimmed
             var dataAsString = data.ToString();
 
             // Generates a valid data file
             IniData data2 = new IniDataParser().Parse(dataAsString);
-
 
             // check all strings are equal
             Assert.That(dataAsString, Is.EqualTo(data2.ToString()));
