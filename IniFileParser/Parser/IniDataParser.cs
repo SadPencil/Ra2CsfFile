@@ -4,6 +4,7 @@ using IniParser.Exceptions;
 using IniParser.Model;
 using IniParser.Model.Configuration;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace IniParser.Parser
 {
@@ -239,10 +240,16 @@ namespace IniParser.Parser
             // matches the whitespace in front of it, and a comment string can be longer than one
             // character ("//" for instance).
             string matchedComment = match.Value;
-            Int32 commentIndex = matchedComment.IndexOf(Configuration.CommentString, StringComparison.Ordinal);
+
+            // The configuration keeps the comment string with the characters that are special to a
+            // regular expression escaped, so unescape it before looking it up in the line: a marker
+            // such as "\" is stored as "\\" and would otherwise be found in a UNC path like
+            // "\\server\share" instead of at the start of the comment.
+            string commentString = Regex.Unescape(Configuration.CommentString);
+            Int32 commentIndex = commentString.Length == 0 ? -1 : matchedComment.IndexOf(commentString, StringComparison.Ordinal);
             if (commentIndex >= 0)
             {
-                _currentCommentListTemp.Add(matchedComment.Substring(commentIndex + Configuration.CommentString.Length));
+                _currentCommentListTemp.Add(matchedComment.Substring(commentIndex + commentString.Length));
             }
             else
             {

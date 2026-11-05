@@ -176,6 +176,28 @@ name=Marble Zone
             parser.Parse(iniStr);
         }
 
+
+        [Test]
+        public void comment_text_of_an_escaped_marker()
+        {
+            // The marker is stored with the escape that the regular expression needs, so a UNC path in
+            // the same line must not be taken for the marker.
+            var parser = new IniDataParser();
+            parser.Configuration.CommentString = @"\";
+
+            var iniData = parser.Parse("[section]\n" + @"\ See \\server\share" + "\nkey=value\n");
+
+            Assert.That(iniData["section"].GetKeyData("key").Comments[0], Is.EqualTo(@" See \\server\share"));
+
+            // The same for a marker of more than one character that contains a special character.
+            var multiCharParser = new IniDataParser();
+            multiCharParser.Configuration.CommentString = "**";
+
+            var multiCharData = multiCharParser.Parse("[section]\n** a comment\nkey=value\n");
+
+            Assert.That(multiCharData["section"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
+        }
+
         [Test]
         public void escape_section_regex_special_characters()
         {
