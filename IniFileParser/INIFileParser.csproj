@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- Not INIFileParser, so that the assembly can be referenced together with the upstream one. -->
     <AssemblyName>SadPencil.Ra2CsfFile.IniParser</AssemblyName>
     <RootNamespace>IniParser</RootNamespace>
     <Version>2.6.0</Version>
