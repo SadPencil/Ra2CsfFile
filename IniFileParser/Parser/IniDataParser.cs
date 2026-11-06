@@ -417,8 +417,8 @@ namespace IniParser.Parser
             if (key.Length > 0 && Char.IsWhiteSpace(key[key.Length - 1]))
             {
                 throw new ParsingException(String.Format(
-                    "The name of the key \"{0}\" ends with whitespace. Write the pair as \"key=value\"; write \"key= value\" when the value itself starts with a space.",
-                    key));
+                    "The name of the key \"{0}\" ends with whitespace. Write the pair as \"key{1}value\"; write \"key{1} value\" when the value itself starts with a space.",
+                    key, Configuration.KeyValueAssigmentChar));
             }
 
             return key;
