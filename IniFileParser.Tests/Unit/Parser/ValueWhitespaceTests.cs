@@ -95,6 +95,17 @@ namespace IniFileParser.Tests.Unit.Parser
         }
 
         [Test]
+        public void duplicated_keys_keep_the_whitespace_of_each_value()
+        {
+            var parser = new ConcatenateDuplicatedKeysIniDataParser();
+            parser.Configuration.AllowDuplicateSections = true;
+
+            var iniData = parser.Parse("[MySection]\nFile= a.txt\n[MySection]\nFile= b.txt\n");
+
+            Assert.That(iniData["MySection"]["File"], Is.EqualTo(" a.txt; b.txt"));
+        }
+
+        [Test]
         public void write_values_without_spaces_around_the_assignment_character()
         {
             var data = new IniDataParser().Parse("[SECTION]\r\nkey= value\r\n");

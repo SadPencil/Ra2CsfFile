@@ -40,16 +40,5 @@ File=d.txt
             Assert.That(inidata["MySection"]["File"], Is.EqualTo("a.txt+b.txt+c.txt+d.txt"));
         }
 
-        [Test]
-        public void duplicated_keys_keep_the_whitespace_of_each_value()
-        {
-            var parser = new ConcatenateDuplicatedKeysIniDataParser();
-            parser.Configuration.AllowDuplicateSections = true;
-
-            var iniData = parser.Parse("[MySection]\nFile= a.txt\n[MySection]\nFile= b.txt\n");
-
-            Assert.That(iniData["MySection"]["File"], Is.EqualTo(" a.txt; b.txt"));
-        }
-
     }
 }
