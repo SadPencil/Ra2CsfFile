@@ -21,7 +21,6 @@ MIT
 
 ## Notes
 Reference: https://modenc.renegadeprojects.com/CSF_File_Format
-The vendored ini-parser sources in `IniFileParser/` are patched; see `IniFileParser/README.md` for the list of differences.
 
 ## Bundled ini parser
 
