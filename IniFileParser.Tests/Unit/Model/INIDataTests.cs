@@ -13,12 +13,12 @@ namespace IniFileParser.Tests.Model
         public void delete_all_comments()
         {
             string iniData = @";comment1
-key1 = 2
+key1=2
 ;comment2
 [section1]
 
 ;a value
-value1 = 10.6";
+value1=10.6";
 
             var data = new IniDataParser().Parse(iniData);
 

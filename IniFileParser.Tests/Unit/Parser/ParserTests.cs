@@ -103,7 +103,7 @@ mykey1=value1
         [Test, Description("Test for Issue 3: http://code.google.com/p/ini-parser/issues/detail?id=3")]
         public void allow_keys_with_dots()
         {
-            string strTest = "[section_issue.3]\nkey.with_dots = value\n";
+            string strTest = "[section_issue.3]\nkey.with_dots=value\n";
 
             IniData data = new IniDataParser().Parse(strTest);
 
@@ -194,7 +194,7 @@ key3=value3";
 key1=value1
 key2=value2
 [123_2]
-key3 = value3
+key3=value3
 [123_1]
 key4=value4";
 
@@ -311,8 +311,8 @@ key=value";
 #comment 2
 
 #control value
-value1 = 10.6
-value2 = 10";
+value1=10.6
+value2=10";
             
             var parser = new IniDataParser();
 
@@ -427,7 +427,7 @@ Run=http://192.168.1.88:8139/getsms.aspx?SENDER=@@SENDER@@&FULLSMS=@@FULLSMS@@&S
                         ;begin
 
                         ;value
-                        value1 = test
+                        value1=test
 
                         ;end
                         ";
@@ -449,9 +449,9 @@ Run=http://192.168.1.88:8139/getsms.aspx?SENDER=@@SENDER@@&FULLSMS=@@FULLSMS@@&S
             string iniDataString = @";begin
 
                             ;value
-                            value1 = test
+                            value1=test
                                 = test2
-                            value1 = test3
+                            value1=test3
                             ";
 
             var parser = new IniDataParser();
@@ -477,9 +477,9 @@ Run=http://192.168.1.88:8139/getsms.aspx?SENDER=@@SENDER@@&FULLSMS=@@FULLSMS@@&S
             string iniDataString = @";begin
 
                             ;value
-                            value1 = test
+                            value1=test
                                 = test2
-                            value1 = test3
+                            value1=test3
                             ";
 
             var parser = new IniDataParser();
@@ -501,9 +501,9 @@ Run=http://192.168.1.88:8139/getsms.aspx?SENDER=@@SENDER@@&FULLSMS=@@FULLSMS@@&S
 			var parser = new IniDataParser();
 
 			var iniDataString = @"[W101 0.5"" wc]
-key = value
+key=value
 [W103 0.5' wc]
-key2 = value2";
+key2=value2";
 			IniData parsedData = parser.Parse(iniDataString);
 
 			Assert.That(parsedData.Sections["W101 0.5\" wc"], Is.Not.Empty);

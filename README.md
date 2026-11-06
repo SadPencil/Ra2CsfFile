@@ -28,7 +28,7 @@ SPCSF001 when an upstream `INIFileParser` assembly is referenced.
 ## Version History
 
 ```
-v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; bundle a patched ini-parser as SadPencil.Ra2CsfFile.IniParser 2.6.0 and warn at build time when the upstream ini parser is referenced too
+v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; bundle a patched ini-parser as SadPencil.Ra2CsfFile.IniParser 2.6.0 and warn at build time when the upstream ini parser is referenced too; reject an ini key that ends with whitespace instead of trimming it
 v2.2.5: update existing label with correct key case
 v2.2.4: add trimmable line warning comment when generating an ini file
 v2.2.3: ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"

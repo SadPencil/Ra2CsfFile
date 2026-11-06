@@ -404,13 +404,24 @@ namespace IniParser.Parser
         ///     The string to be processed, which contains a key/value pair
         /// </param>
         /// <returns>
-        ///     The name of the extracted key.
+        ///     The name of the extracted key, as it is written.
         /// </returns>
+        /// <exception cref="ParsingException">
+        ///     The key ends with whitespace, as in <c>key = value</c>.
+        /// </exception>
         protected virtual string ExtractKey(string s)
         {
             int index = s.IndexOf(Configuration.KeyValueAssigmentChar, 0);
+            string key = s.Substring(0, index);
 
-            return s.Substring(0, index).Trim();
+            if (key.Length > 0 && Char.IsWhiteSpace(key[key.Length - 1]))
+            {
+                throw new ParsingException(String.Format(
+                    "The name of the key \"{0}\" ends with whitespace. Write the pair as \"key=value\"; write \"key= value\" when the value itself starts with a space.",
+                    key));
+            }
+
+            return key;
         }
 
         /// <summary>
