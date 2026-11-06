@@ -16,7 +16,7 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>split the ini support out of this package into SadPencil.Ra2CsfFile.Ini, which is the only package that carries ini code; remove the obsolete CsfFile.LoadFromIniFile, CsfFile.WriteIniFile and CsfFile.GetCsfLang methods; normalize the line breaks of label values loaded from a csf file to LF</PackageReleaseNotes>
+    <PackageReleaseNotes>split the ini support out of this package into SadPencil.Ra2CsfFile.Ini, which is the only package that carries ini code; remove the obsolete CsfFile.LoadFromIniFile, CsfFile.WriteIniFile and CsfFile.GetCsfLang methods; normalize the line breaks of label values loaded from a csf file to LF; enable Encoding1252WriteWorkaround by default, so that both workarounds are on by default</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
