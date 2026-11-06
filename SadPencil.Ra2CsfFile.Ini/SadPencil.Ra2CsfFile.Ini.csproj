@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>sadpencil</Authors>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <FileVersion>3.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <PackageProjectUrl>https://github.com/SadPencil/Ra2CsfFile</PackageProjectUrl>
+    <Description>(De)serialize the string table of Red Alert 2 from/to .ini files, on top of SadPencil.Ra2CsfFile.</Description>
+    <Copyright>Copyright © SadPencil 2021-2026</Copyright>
+    <RepositoryUrl>https://github.com/SadPencil/Ra2CsfFile</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>CSF Westwood Red-Alert-2 RA2 INI</PackageTags>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageReleaseNotes>new package: the ini support of SadPencil.Ra2CsfFile moves here, together with the bundled patched ini-parser as SadPencil.Ra2CsfFile.IniParser 3.0.0; preserve the whitespace of label values loaded from an ini file; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; reject an ini key that ends with whitespace instead of trimming it; warn at build time when the upstream ini parser is referenced too</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- The ini parser is a private project reference: its assembly must be shipped inside this
+         package, but it must not become a package dependency, since it is not published. -->
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeVendoredIniParserInPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SadPencil.Ra2CsfFile\SadPencil.Ra2CsfFile.csproj" />
+    <ProjectReference Include="..\IniFileParser\INIFileParser.csproj" PrivateAssets="All" />
+    <None Include="..\IniFileParser\LICENSE" Pack="true" PackagePath="third-party\ini-parser\" />
+    <PackageReference Include="NaturalStringExtensions" Version="3.0.0" />
+  </ItemGroup>
+
+  <Target Name="IncludeVendoredIniParserInPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <!-- Only the vendored parser is bundled: the SadPencil.Ra2CsfFile assembly of the other
+           project reference arrives through the package dependency. -->
+      <_VendoredIniParserAssembly Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget','ProjectReference')->WithMetadataValue('Filename','SadPencil.Ra2CsfFile.IniParser'))" />
+      <BuildOutputInPackage Include="@(_VendoredIniParserAssembly)" />
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\build\SadPencil.Ra2CsfFile.Ini.targets" Pack="true" PackagePath="build\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisMode>All</AnalysisMode>
+  </PropertyGroup>
+
+</Project>

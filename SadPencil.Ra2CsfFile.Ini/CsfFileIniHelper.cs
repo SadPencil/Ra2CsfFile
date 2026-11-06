@@ -9,10 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+[assembly: CLSCompliant(true)]
 namespace SadPencil.Ra2CsfFile
 {
     /// <summary>
-    /// A helper class for CsfFile class. It focus on loading/writing .ini files that represents the string table, which can be regarded as a replacement of .csf files.
+    /// A helper class for CsfFile class. It focus on loading/writing .ini files that represents the string table, which can be regarded as a replacement of .csf files. <br/>
+    /// This class lives in the SadPencil.Ra2CsfFile.Ini package, which is the only package that knows about ini files.
     /// </summary>
     public static class CsfFileIniHelper
     {

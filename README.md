@@ -1,11 +1,19 @@
 # SadPencil.Ra2CsfFile
 
 ## .NET Library
-This is a .NET Standard 2.0 Library to load, edit, and save string table files (.csf) for Red Alert 2. Also, (de)serialize the string table from/to .ini files.
+
+This repository publishes two .NET Standard 2.0 libraries:
+
+- **`SadPencil.Ra2CsfFile`** loads, edits, and saves string table files (.csf) for Red Alert 2.
+- **`SadPencil.Ra2CsfFile.Ini`** (de)serializes the string table from/to .ini files.
+
+`SadPencil.Ra2CsfFile.Ini` references `SadPencil.Ra2CsfFile`, and it is the only one of the two
+libraries that contains ini code: the `CsfFileIniHelper` class and the bundled patched ini parser.
+A project that only works with .csf files needs `SadPencil.Ra2CsfFile` alone.
 
 ## Example use
 
-See `ExampleApp/Program.cs` file.
+See `ExampleApp/Program.cs` file. The example app references both libraries.
 
 ## License
 
@@ -17,18 +25,19 @@ The vendored ini-parser sources in `IniFileParser/` are patched; see `IniFilePar
 
 ## Bundled ini parser
 
-The package ships a patched [ini-parser](https://github.com/rickyah/ini-parser) as
+`SadPencil.Ra2CsfFile.Ini` ships a patched [ini-parser](https://github.com/rickyah/ini-parser) as
 `SadPencil.Ra2CsfFile.IniParser.dll`, with the `IniParser.*` namespaces, so a label value keeps its
 whitespace through the conversion.
 
 Do not reference `ini-parser` or `ini-parser-netstandard` as well: they define the same types as the
 bundled copy, and the upstream parser trims the whitespace of a label value. The build reports
-SPCSF001 when an upstream `INIFileParser` assembly is referenced.
+SPCSFINI001 when a project that references `SadPencil.Ra2CsfFile.Ini` also references an upstream
+`INIFileParser` assembly.
 
 ## Version History
 
 ```
-v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; bundle a patched ini-parser as SadPencil.Ra2CsfFile.IniParser 2.6.0 and warn at build time when the upstream ini parser is referenced too; reject an ini key that ends with whitespace instead of trimming it
+v3.0.0: split the ini support out of SadPencil.Ra2CsfFile into the new SadPencil.Ra2CsfFile.Ini package, which is the only package that carries ini code, including the bundled patched ini-parser as SadPencil.Ra2CsfFile.IniParser 3.0.0; remove the obsolete CsfFile.LoadFromIniFile, CsfFile.WriteIniFile and CsfFile.GetCsfLang methods; normalize the line breaks of label values loaded from a csf file to LF; preserve the whitespace of label values loaded from an ini file; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; warn at build time when the upstream ini parser is referenced too; reject an ini key that ends with whitespace instead of trimming it
 v2.2.5: update existing label with correct key case
 v2.2.4: add trimmable line warning comment when generating an ini file
 v2.2.3: ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"
@@ -49,4 +58,3 @@ v1.2.0: api breaking change: CsfFile.Labels will now store only one value for a 
 v1.1.1: add XML documentation; re-release the library with Release configuration.
 v1.1.0: fix a bug where multi-line text will be trimmed mistakenly; invalid chars in label name will now be checked.
 ```
-

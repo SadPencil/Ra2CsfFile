@@ -431,13 +431,6 @@ namespace SadPencil.Ra2CsfFile
         }
 
         /// <summary>
-        /// Converts an Int32 integer to CsfLang enum. Return CsfLang.Unknown for unknown integers.
-        /// </summary>
-        /// <param name="value">The integer to be converted.</param>
-        /// <returns>The corresponding CsfLang enum.</returns>
-        [Obsolete("Please use CsfLangHelper.GetCsfLang() instead.")]
-        public static CsfLang GetCsfLang(Int32 value) => CsfLangHelper.GetCsfLang(value);
-        /// <summary>
         /// Check whether the name of a label is valid. A valid label name is an ASCII string without spaces, tabs, line breaks, and invisible characters.
         /// </summary>
         /// <param name="labelName">The name of a label to be checked.</param>
@@ -447,20 +440,6 @@ namespace SadPencil.Ra2CsfFile
         // do not contains tabs and line breaks
         // note: space are tolerated because in the original ra2.csf file there is a label named [GUI:Password entry box label]
             !string.IsNullOrEmpty(labelName) && !labelName.ToCharArray().Any(c => (c < 32 || c >= 127));
-
-        /// <summary>
-        /// Load an existing ini file that represent the stringtable.
-        /// </summary>
-        /// <param name="stream">The file stream of an ini file.</param>
-        [Obsolete("Please use CsfFileIniHelper.LoadFromIniFile() instead.")]
-        public static CsfFile LoadFromIniFile(Stream stream) => CsfFileIniHelper.LoadFromIniFile(stream);
-
-        /// <summary>
-        /// Write an ini file that represent the stringtable.
-        /// </summary>
-        /// <param name="stream">The file stream of a new ini file.</param>
-        [Obsolete("Please use CsfFileIniHelper.WriteIniFile() instead.")]
-        public void WriteIniFile(Stream stream) => CsfFileIniHelper.WriteIniFile(this, stream);
 
         public Boolean Equals(CsfFile other)
         {
