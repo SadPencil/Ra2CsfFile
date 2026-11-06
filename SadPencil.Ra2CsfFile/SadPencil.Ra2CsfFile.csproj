@@ -46,6 +46,8 @@
 
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <!-- Warn a project that also references the upstream ini-parser package. -->
+    <None Include="..\build\SadPencil.Ra2CsfFile.targets" Pack="true" PackagePath="build\" />
   </ItemGroup>
 	
 	<PropertyGroup>

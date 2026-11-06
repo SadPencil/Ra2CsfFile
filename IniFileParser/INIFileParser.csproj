@@ -2,10 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>INIFileParser</AssemblyName>
+    <!-- The assembly name differs from the upstream "INIFileParser" so that a project that also
+         references the ini-parser package gets two distinct assemblies instead of two files with
+         the same identity. The namespaces stay "IniParser.*", so the types are the ones of the
+         upstream library. -->
+    <AssemblyName>SadPencil.Ra2CsfFile.IniParser</AssemblyName>
     <RootNamespace>IniParser</RootNamespace>
-    <Version>2.5.2</Version>
-    <!-- INIFileParser.dll is included in the SadPencil.Ra2CsfFile package and has no separate package. -->
+    <!-- The sources are ini-parser 2.5.2 with the changes listed in the readme of this directory, so
+         the version is ahead of the upstream one instead of equal to it: 2.6.0. -->
+    <Version>2.6.0</Version>
+    <AssemblyVersion>2.6.0</AssemblyVersion>
+    <FileVersion>2.6.0</FileVersion>
+    <!-- The name of the file and the properties of the assembly are what a user sees, so name the
+         project and say in the description what this copy is. -->
+    <Product>SadPencil.Ra2CsfFile.IniParser</Product>
+    <AssemblyTitle>ini-parser</AssemblyTitle>
+    <Description>ini-parser 2.5.2, patched by SadPencil.Ra2CsfFile: keeps the whitespace of a value and of a comment.</Description>
+    <Company>SadPencil.Ra2CsfFile</Company>
+    <!-- The assembly is included in the SadPencil.Ra2CsfFile package and has no package of its own. -->
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- ini-parser 2.5.2 contains malformed XML documentation and uses obsolete members. -->

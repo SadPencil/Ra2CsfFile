@@ -15,6 +15,20 @@ MIT
 Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 The vendored ini-parser sources in `IniFileParser/` are patched; see `IniFileParser/README.md` for the list of differences.
 
+## The bundled ini parser
+
+The package ships its own copy of [ini-parser](https://github.com/rickyah/ini-parser) as
+`SadPencil.Ra2CsfFile.IniParser.dll`, adapted so that the whitespace of a label value and of a
+comment survives the conversion; the differences from the upstream sources are listed in
+`IniFileParser/README.md`. The types keep the `IniParser.*` namespaces, so they can be used
+directly.
+
+Do not reference the `ini-parser` or `ini-parser-netstandard` package in a project that references
+this package. Both assemblies define the same types, so a type of the `IniParser` namespace becomes
+ambiguous; and an application that ends up with the upstream assembly instead silently loses the
+whitespace of every label value. The package reports a warning (SPCSF001) at build time when both
+are referenced.
+
 ## Version History
 
 ```

@@ -1,0 +1,21 @@
+<Project>
+
+  <!--
+    SadPencil.Ra2CsfFile ships its own copy of ini-parser, patched so that the whitespace of a value
+    and of a comment survives the conversion. The assembly name is SadPencil.Ra2CsfFile.IniParser so
+    that it does not collide with the INIFileParser.dll of the upstream package, but the namespaces
+    are the same, so a project that references both compiles the IniParser types twice. Be loud about
+    it: an application that reaches the upstream assembly would silently lose the whitespace of every
+    label value.
+  -->
+  <Target Name="WarnAboutUpstreamIniParser" BeforeTargets="Build">
+    <ItemGroup>
+      <_UpstreamIniParserPackage Include="@(PackageReference)"
+                                 Condition="'%(Identity)' == 'ini-parser' Or '%(Identity)' == 'ini-parser-netstandard'" />
+    </ItemGroup>
+    <Warning Condition="'@(_UpstreamIniParserPackage)' != ''"
+             Code="SPCSF001"
+             Text="SadPencil.Ra2CsfFile bundles a patched copy of ini-parser as SadPencil.Ra2CsfFile.IniParser.dll. Referencing @(_UpstreamIniParserPackage->'%(Identity)') as well compiles the IniParser types twice and the upstream parser does not keep the whitespace of a label value; remove the package reference." />
+  </Target>
+
+</Project>
