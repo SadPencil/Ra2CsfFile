@@ -26,8 +26,9 @@ directly.
 Do not reference the `ini-parser` or `ini-parser-netstandard` package in a project that references
 this package. Both assemblies define the same types, so a type of the `IniParser` namespace becomes
 ambiguous; and an application that ends up with the upstream assembly instead silently loses the
-whitespace of every label value. The package reports a warning (SPCSF001) at build time when both
-are referenced.
+whitespace of every label value. The package reports a warning (SPCSF001) at build time when a
+project references an assembly called `INIFileParser.dll` as well, no matter which package brings
+it in.
 
 ## Version History
 
