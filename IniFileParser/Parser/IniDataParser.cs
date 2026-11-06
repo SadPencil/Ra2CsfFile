@@ -404,7 +404,7 @@ namespace IniParser.Parser
         ///     The string to be processed, which contains a key/value pair
         /// </param>
         /// <returns>
-        ///     The name of the extracted key, as it is written.
+        ///     The name of the extracted key.
         /// </returns>
         /// <exception cref="ParsingException">
         ///     The key ends with whitespace, as in <c>key = value</c>.
