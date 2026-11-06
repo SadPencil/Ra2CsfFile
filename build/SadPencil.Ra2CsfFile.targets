@@ -1,6 +1,6 @@
 <Project>
 
-  <!-- The bundled ini parser and the upstream one define the same types, so reference one of them. -->
+  <!-- A referenced parser assembly need not come from a PackageReference, so check both lists. -->
   <Target Name="WarnAboutUpstreamIniParser" AfterTargets="ResolveAssemblyReferences" BeforeTargets="Build">
     <ItemGroup>
       <_UpstreamIniParserAssembly Include="@(ReferencePath)" Condition="'%(Filename)' == 'INIFileParser'" />
@@ -9,7 +9,7 @@
     </ItemGroup>
     <Warning Condition="'@(_UpstreamIniParserAssembly)' != '' Or '@(_UpstreamIniParserPackage)' != ''"
              Code="SPCSF001"
-             Text="The project references INIFileParser (ini-parser or ini-parser-netstandard) besides the ini parser bundled with SadPencil.Ra2CsfFile, and the two define the same types. The upstream parser also does not keep the whitespace of a label value; remove the package reference." />
+             Text="SadPencil.Ra2CsfFile bundles its own ini parser, and this project also references the upstream INIFileParser (ini-parser or ini-parser-netstandard). Both define the IniParser types, and the upstream parser trims the whitespace of a label value; remove the upstream package reference." />
   </Target>
 
 </Project>

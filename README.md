@@ -15,21 +15,20 @@ MIT
 Reference: https://modenc.renegadeprojects.com/CSF_File_Format
 The vendored ini-parser sources in `IniFileParser/` are patched; see `IniFileParser/README.md` for the list of differences.
 
-## The bundled ini parser
+## Bundled ini parser
 
-The package ships its own copy of [ini-parser](https://github.com/rickyah/ini-parser) as
-`SadPencil.Ra2CsfFile.IniParser.dll`, adapted so that the whitespace of a value and of a comment
-survives the conversion; `IniFileParser/README.md` lists the differences. The types keep the
-`IniParser.*` namespaces.
+The package ships a patched [ini-parser](https://github.com/rickyah/ini-parser) as
+`SadPencil.Ra2CsfFile.IniParser.dll`, with the `IniParser.*` namespaces, so a label value keeps its
+whitespace through the conversion.
 
-Reference either that copy or the `ini-parser` package, not both: the two define the same types,
-and the upstream parser drops the whitespace of a label value. A build warning (SPCSF001) says so
-when both are referenced.
+Do not reference `ini-parser` or `ini-parser-netstandard` as well: they define the same types as the
+bundled copy, and the upstream parser trims the whitespace of a label value. The build reports
+SPCSF001 when an upstream `INIFileParser` assembly is referenced.
 
 ## Version History
 
 ```
-v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; bundle the patched ini parser as SadPencil.Ra2CsfFile.IniParser 2.6.0 and warn at build time when the ini-parser package is referenced as well
+v2.3.0: preserve the whitespace of label values loaded from an ini file; normalize the line breaks of label values loaded from a csf file to LF; drop the WhiteSpaceWarning key from generated ini files; remove CsfFileIniHelper.TrimMultiLine; fix a bug where labels were not sorted when writing an ini file; bundle a patched ini-parser as SadPencil.Ra2CsfFile.IniParser 2.6.0 and warn at build time when the upstream ini parser is referenced too
 v2.2.5: update existing label with correct key case
 v2.2.4: add trimmable line warning comment when generating an ini file
 v2.2.3: ignore case when sorting keys; use natural sort order to make sure "key10" is placed after "key9"

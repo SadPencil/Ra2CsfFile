@@ -1,11 +1,12 @@
 # INIFileParser
 
 This directory contains the sources of [ini-parser](https://github.com/rickyah/ini-parser) 2.5.2,
-copyright (c) 2008 Ricardo Amores Hernández, licensed under the MIT license in `LICENSE`, with the
-changes listed below. The assembly is named `SadPencil.Ra2CsfFile.IniParser` and versioned 2.6.0,
-so that it is told apart from the upstream `INIFileParser`; the namespaces stay `IniParser.*`. It
-is shipped inside the `SadPencil.Ra2CsfFile` package and has no package of its own, and
-`IniFileParser.Tests` is its imported test suite.
+copyright (c) 2008 Ricardo Amores Hernández, licensed under the MIT license in `LICENSE`.
+
+The patched sources build as `SadPencil.Ra2CsfFile.IniParser.dll`, versioned 2.6.0 to show that they
+are past upstream 2.5.2, and keep the `IniParser.*` namespaces. That assembly ships inside the
+`SadPencil.Ra2CsfFile` package, which is its only package; `IniFileParser.Tests` is its imported
+test suite.
 
 The sources are not identical to upstream: they are patched so that a label value of a string table
 survives the conversion to and from an ini file. Every deliberate difference is listed below. Keep
