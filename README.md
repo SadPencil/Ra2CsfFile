@@ -18,17 +18,13 @@ The vendored ini-parser sources in `IniFileParser/` are patched; see `IniFilePar
 ## The bundled ini parser
 
 The package ships its own copy of [ini-parser](https://github.com/rickyah/ini-parser) as
-`SadPencil.Ra2CsfFile.IniParser.dll`, adapted so that the whitespace of a label value and of a
-comment survives the conversion; the differences from the upstream sources are listed in
-`IniFileParser/README.md`. The types keep the `IniParser.*` namespaces, so they can be used
-directly.
+`SadPencil.Ra2CsfFile.IniParser.dll`, adapted so that the whitespace of a value and of a comment
+survives the conversion; `IniFileParser/README.md` lists the differences. The types keep the
+`IniParser.*` namespaces.
 
-Do not reference the `ini-parser` or `ini-parser-netstandard` package in a project that references
-this package. Both assemblies define the same types, so a type of the `IniParser` namespace becomes
-ambiguous; and an application that ends up with the upstream assembly instead silently loses the
-whitespace of every label value. The package reports a warning (SPCSF001) at build time when a
-project references an assembly called `INIFileParser.dll` as well, no matter which package brings
-it in.
+Reference either that copy or the `ini-parser` package, not both: the two define the same types,
+and the upstream parser drops the whitespace of a label value. A build warning (SPCSF001) says so
+when both are referenced.
 
 ## Version History
 

@@ -1,17 +1,6 @@
 <Project>
 
-  <!--
-    SadPencil.Ra2CsfFile ships its own copy of ini-parser, patched so that the whitespace of a value
-    and of a comment survives the conversion. Its assembly is called SadPencil.Ra2CsfFile.IniParser so
-    that it does not collide with the INIFileParser.dll of the upstream packages, but the namespaces
-    are the same, so a project that references both compiles the IniParser types twice. Be loud about
-    it: an application that ends up with the upstream assembly silently loses the whitespace of every
-    label value.
-
-    The check looks at the assemblies that are resolved, so it covers every package that ships an
-    INIFileParser.dll (ini-parser and ini-parser-netstandard), and it also looks at the package
-    references, in case the assembly of the package is not part of the compilation.
-  -->
+  <!-- The bundled ini parser and the upstream one define the same types, so reference one of them. -->
   <Target Name="WarnAboutUpstreamIniParser" AfterTargets="ResolveAssemblyReferences" BeforeTargets="Build">
     <ItemGroup>
       <_UpstreamIniParserAssembly Include="@(ReferencePath)" Condition="'%(Filename)' == 'INIFileParser'" />
@@ -20,7 +9,7 @@
     </ItemGroup>
     <Warning Condition="'@(_UpstreamIniParserAssembly)' != '' Or '@(_UpstreamIniParserPackage)' != ''"
              Code="SPCSF001"
-             Text="SadPencil.Ra2CsfFile bundles a patched copy of ini-parser as SadPencil.Ra2CsfFile.IniParser.dll, and this project also references INIFileParser (the ini-parser or ini-parser-netstandard package). The IniParser types are compiled twice, and the upstream parser does not keep the whitespace of a label value; remove the package reference." />
+             Text="The project references INIFileParser (ini-parser or ini-parser-netstandard) besides the ini parser bundled with SadPencil.Ra2CsfFile, and the two define the same types. The upstream parser also does not keep the whitespace of a label value; remove the package reference." />
   </Target>
 
 </Project>
