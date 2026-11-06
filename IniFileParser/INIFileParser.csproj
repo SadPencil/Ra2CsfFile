@@ -5,7 +5,7 @@
     <AssemblyName>SadPencil.Ra2CsfFile.IniParser</AssemblyName>
     <RootNamespace>IniParser</RootNamespace>
     <Version>2.6.0</Version>
-    <Description>ini-parser 2.5.2 sources patched by SadPencil.Ra2CsfFile: label values and comments keep their whitespace.</Description>
+    <Description>ini-parser 2.5.2, patched by SadPencil.Ra2CsfFile: label values and comments keep their whitespace.</Description>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- ini-parser 2.5.2 contains malformed XML documentation and uses obsolete members. -->
