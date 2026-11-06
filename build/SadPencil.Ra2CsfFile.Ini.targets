@@ -8,8 +8,8 @@
                                  Condition="'%(Identity)' == 'ini-parser' Or '%(Identity)' == 'ini-parser-netstandard'" />
     </ItemGroup>
     <Warning Condition="'@(_UpstreamIniParserAssembly)' != '' Or '@(_UpstreamIniParserPackage)' != ''"
-             Code="SPCSF001"
-             Text="SadPencil.Ra2CsfFile bundles its own ini parser, and this project also references the upstream INIFileParser (ini-parser or ini-parser-netstandard). Please remove the upstream package reference." />
+             Code="SPCSFINI001"
+             Text="SadPencil.Ra2CsfFile.Ini bundles its own ini parser, and this project also references the upstream INIFileParser (ini-parser or ini-parser-netstandard). Please remove the upstream package reference." />
   </Target>
 
 </Project>

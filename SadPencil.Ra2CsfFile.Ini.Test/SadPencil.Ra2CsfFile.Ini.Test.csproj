@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+    <TestProjectType>UnitTest</TestProjectType>
+    <AssemblyTitle>SadPencil.Ra2CsfFile.Ini.Test</AssemblyTitle>
+    <Product>SadPencil.Ra2CsfFile.Ini.Test</Product>
+    <Copyright>Copyright © SadPencil 2025</Copyright>
+    <LangVersion>12</LangVersion>
+	  <IsPackable>false</IsPackable>
+	  <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestAdapter" Version="3.10.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.10.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SadPencil.Ra2CsfFile.Ini\SadPencil.Ra2CsfFile.Ini.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Resources\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <!-- The string tables are the fixtures of the csf test project; use them here as they are. -->
+    <None Include="..\SadPencil.Ra2CsfFile.Test\Resources\Stringtables\**\*.*">
+      <Link>Resources\Stringtables\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

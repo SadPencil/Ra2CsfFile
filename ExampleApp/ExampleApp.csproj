@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SadPencil.Ra2CsfFile\SadPencil.Ra2CsfFile.csproj" />
+    <ProjectReference Include="..\SadPencil.Ra2CsfFile.Ini\SadPencil.Ra2CsfFile.Ini.csproj" />
   </ItemGroup>
 
 </Project>

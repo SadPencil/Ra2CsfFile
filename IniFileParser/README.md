@@ -4,7 +4,7 @@ This directory contains the sources of [ini-parser](https://github.com/rickyah/i
 copyright (c) 2008 Ricardo Amores Hernández, licensed under the MIT license in `LICENSE`.
 
 The patched sources build as `SadPencil.Ra2CsfFile.IniParser.dll`, in the `IniParser.*` namespaces.
-That assembly ships inside the `SadPencil.Ra2CsfFile` package, which is its only package;
+That assembly ships inside the `SadPencil.Ra2CsfFile.Ini` package, which is its only package;
 `IniFileParser.Tests` is its imported test suite.
 
 The sources are not identical to upstream: they are patched so that a label value of a string table
