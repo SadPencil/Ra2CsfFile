@@ -43,7 +43,7 @@ parse/format cycle, and the value would grow without bound.
 
 ## 3. Tests
 
-`IniFileParser.Tests` is the upstream test suite, with four kinds of changes:
+`IniFileParser.Tests` is the upstream test suite, with the following changes:
 
 - The fixtures use `key=value`. A value that starts with a space is only interesting to the
   whitespace tests, so the remaining tests should not carry one just because their source line was
