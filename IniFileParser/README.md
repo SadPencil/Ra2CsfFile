@@ -18,6 +18,8 @@ this list up to date when the sources are updated from upstream.
 - `ProcessLine` trims the start of a line only (`TrimStart` instead of `Trim`), so the trailing
   whitespace of a line is not dropped.
 - `ExtractValue` returns everything after the first assignment character without trimming it.
+- `ExtractKey` returns the key as it is written, and reports a key that ends with whitespace with a
+  `ParsingException` instead of trimming it.
 - `ExtractComment` keeps the whitespace around a comment instead of trimming it: the whitespace in
   front of the comment stays part of the value, the whitespace that belongs to the comment goes away
   with it, and the comment text that is stored keeps the whitespace of the line as well. Only the
@@ -27,9 +29,10 @@ this list up to date when the sources are updated from upstream.
   its own, so the value part of this matters only with an inline comment expression.
 
 A string table label value may end with a space that the game displays, and an empty label can be a
-single space, so trimming it would change the string table itself. The consequence for an ini file
-that is written by hand in the common `key = value` style: the space after the assignment character
-belongs to the value, so it is read as `" value"`. Key and section names are still trimmed.
+single space, so trimming it would change the string table itself. An ini file written in the common
+`key = value` style is therefore reported instead of quietly trimming the key, since the space after
+the assignment character would become part of the value. Always write `key=value`. Write `key= value` when the
+value itself starts with a space. INI Section names are still trimmed.
 
 ## 2. An ini file is written without whitespace around the assignment character
 

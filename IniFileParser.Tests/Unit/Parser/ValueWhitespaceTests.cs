@@ -12,13 +12,13 @@ namespace IniFileParser.Tests.Unit.Parser
         [Test]
         public void preserve_values_by_default()
         {
-            var data = new IniDataParser().Parse(" [ TEST ] \r\n Value \t=  a \t\r\n");
+            var data = new IniDataParser().Parse(" [ TEST ] \r\n Value=  a \t\r\n");
             Assert.That(data["TEST"]["Value"], Is.EqualTo("  a \t"));
         }
 
         [TestCase("Value=    a\n", "    a")]
         [TestCase("Value=a    \r\n", "a    ")]
-        [TestCase("\t Value \t= \t a \t \r\n", " \t a \t ")]
+        [TestCase("\t Value= \t a \t \r\n", " \t a \t ")]
         [TestCase("Value=   \n", "   ")]
         [TestCase("Value=\n", "")]
         [TestCase("Value= a=b \n", " a=b ")]
@@ -40,9 +40,9 @@ namespace IniFileParser.Tests.Unit.Parser
                 CommentRegex = new Regex(";.*"),
             };
 
-            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey = value   ; a comment\n");
+            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey=value   ; a comment\n");
 
-            Assert.That(data["SECTION"]["key"], Is.EqualTo(" value   "));
+            Assert.That(data["SECTION"]["key"], Is.EqualTo("value   "));
             Assert.That(data["SECTION"].GetKeyData("key").Comments[0], Is.EqualTo(" a comment"));
         }
 
@@ -89,15 +89,26 @@ namespace IniFileParser.Tests.Unit.Parser
                 CommentRegex = new Regex(";.*"),
             };
 
-            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey = value\n   ; a comment   \n");
+            var data = new IniDataParser(configuration).Parse("[SECTION]\nkey=value\n   ; a comment   \n");
 
             Assert.That(data["SECTION"].Count, Is.EqualTo(1));
         }
 
         [Test]
+        public void duplicated_keys_keep_the_whitespace_of_each_value()
+        {
+            var parser = new ConcatenateDuplicatedKeysIniDataParser();
+            parser.Configuration.AllowDuplicateSections = true;
+
+            var iniData = parser.Parse("[MySection]\nFile= a.txt\n[MySection]\nFile= b.txt\n");
+
+            Assert.That(iniData["MySection"]["File"], Is.EqualTo(" a.txt; b.txt"));
+        }
+
+        [Test]
         public void write_values_without_spaces_around_the_assignment_character()
         {
-            var data = new IniDataParser().Parse("[SECTION]\r\nkey = value\r\n");
+            var data = new IniDataParser().Parse("[SECTION]\r\nkey= value\r\n");
 
             Assert.That(data.ToString(), Is.EqualTo("[SECTION]" + Environment.NewLine + "key= value" + Environment.NewLine));
         }
@@ -107,7 +118,7 @@ namespace IniFileParser.Tests.Unit.Parser
         {
             // The formatter writes with Environment.NewLine, so the expected text has to use it too.
             string newLine = Environment.NewLine;
-            string text = "[SECTION]" + newLine + "key =  value " + newLine;
+            string text = "[SECTION]" + newLine + "key=  value " + newLine;
 
             for (int i = 0; i < 3; i++)
             {

@@ -14,7 +14,7 @@ global key=global value
 ;comment for section1
 [section1]
 ;comment for key1
-key 1 =value 1
+key 1=value 1
 key;2=va:lu;e.5
 [ section 2]
 ;comment for myKey1
