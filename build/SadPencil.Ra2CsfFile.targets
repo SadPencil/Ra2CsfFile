@@ -1,0 +1,15 @@
+<Project>
+
+  <!-- A project can reference the upstream parser through a package or as a plain assembly. -->
+  <Target Name="WarnAboutUpstreamIniParser" AfterTargets="ResolveAssemblyReferences" BeforeTargets="Build">
+    <ItemGroup>
+      <_UpstreamIniParserAssembly Include="@(ReferencePath)" Condition="'%(Filename)' == 'INIFileParser'" />
+      <_UpstreamIniParserPackage Include="@(PackageReference)"
+                                 Condition="'%(Identity)' == 'ini-parser' Or '%(Identity)' == 'ini-parser-netstandard'" />
+    </ItemGroup>
+    <Warning Condition="'@(_UpstreamIniParserAssembly)' != '' Or '@(_UpstreamIniParserPackage)' != ''"
+             Code="SPCSF001"
+             Text="SadPencil.Ra2CsfFile bundles its own ini parser, and this project also references the upstream INIFileParser (ini-parser or ini-parser-netstandard). Please remove the upstream package reference." />
+  </Target>
+
+</Project>

@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>INIFileParser</AssemblyName>
+    <AssemblyName>SadPencil.Ra2CsfFile.IniParser</AssemblyName>
     <RootNamespace>IniParser</RootNamespace>
-    <Version>2.5.2</Version>
-    <!-- INIFileParser.dll is included in the SadPencil.Ra2CsfFile package and has no separate package. -->
+    <Version>2.6.0</Version>
+    <Description>ini-parser 2.5.2, patched by SadPencil.Ra2CsfFile: label values and comments keep their whitespace.</Description>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- ini-parser 2.5.2 contains malformed XML documentation and uses obsolete members. -->
