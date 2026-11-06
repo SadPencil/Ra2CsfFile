@@ -18,12 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <LegacyTestFixture Include="*.ini;*.cfg" />
     <None Update="*.ini;*.cfg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
-  <Target Name="CopyLegacyTestFixtures" AfterTargets="Build">
-    <Copy SourceFiles="@(LegacyTestFixture)" DestinationFolder="$(TargetDir)..\..\" SkipUnchangedFiles="true" />
-  </Target>
 
 </Project>
