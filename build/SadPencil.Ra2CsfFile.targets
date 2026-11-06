@@ -9,7 +9,7 @@
     </ItemGroup>
     <Warning Condition="'@(_UpstreamIniParserAssembly)' != '' Or '@(_UpstreamIniParserPackage)' != ''"
              Code="SPCSF001"
-             Text="SadPencil.Ra2CsfFile bundles its own ini parser, and this project also references the upstream INIFileParser (ini-parser or ini-parser-netstandard). Both define the IniParser types, and the upstream parser trims the whitespace of a label value; remove the upstream package reference." />
+             Text="SadPencil.Ra2CsfFile bundles its own ini parser, and this project also references the upstream INIFileParser (ini-parser or ini-parser-netstandard). Please remove the upstream package reference." />
   </Target>
 
 </Project>
