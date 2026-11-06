@@ -1,6 +1,6 @@
 <Project>
 
-  <!-- The upstream parser can also be referenced as a plain assembly, without a package. -->
+  <!-- A project can reference the upstream parser through a package or as a plain assembly. -->
   <Target Name="WarnAboutUpstreamIniParser" AfterTargets="ResolveAssemblyReferences" BeforeTargets="Build">
     <ItemGroup>
       <_UpstreamIniParserAssembly Include="@(ReferencePath)" Condition="'%(Filename)' == 'INIFileParser'" />
