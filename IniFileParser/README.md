@@ -31,8 +31,8 @@ this list up to date when the sources are updated from upstream.
 A string table label value may end with a space that the game displays, and an empty label can be a
 single space, so trimming it would change the string table itself. An ini file written in the common
 `key = value` style is therefore reported instead of quietly trimming the key, since the space after
-the assignment character would become part of the value. Write `key=value`, or `key= value` when the
-value itself starts with a space. Section names are still trimmed.
+the assignment character would become part of the value. Always write `key=value`. Write `key= value` when the
+value itself starts with a space. INI Section names are still trimmed.
 
 ## 2. An ini file is written without whitespace around the assignment character
 
