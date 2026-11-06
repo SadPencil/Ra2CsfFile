@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
     <TestProjectType>UnitTest</TestProjectType>
     <AssemblyTitle>SadPencil.Ra2CsfFile.Test</AssemblyTitle>
     <Product>SadPencil.Ra2CsfFile.Test</Product>

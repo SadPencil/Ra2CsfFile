@@ -247,15 +247,14 @@ key=value";
             Assert.That(iniData.Sections["Web Colaboration"]["key"], Is.EqualTo("value"));
         }
 
-        [Test, ExpectedException(typeof(ParsingException))]
+        [Test]
         public void allow_skiping_unparsable_lines_disabled_by_default()
         {
             string data =
                 @"win] 
 key1 = value1";
 
-
-            new IniDataParser().Parse(data);
+            _ = Assert.Throws<ParsingException>(() => new IniDataParser().Parse(data));
         }
 
         [Test]
