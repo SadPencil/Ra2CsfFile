@@ -50,6 +50,6 @@ parse/format cycle, and the value would grow without bound.
   written with spaces around the assignment character.
 - The tests that compare a written ini file with its source compare text with normalized line
   breaks, so they do not depend on the line break style of the platform they run on.
-- The project targets `net48` and `net8.0` and uses NUnit 3, so the tests that relied on
+- The project targets `net48` and `net8.0` and uses NUnit 3, and therefore the tests that relied on
   `[ExpectedException]` use `Assert.Throws`.
 - `Unit/Parser/ValueWhitespaceTests.cs` is new and covers the whitespace behaviour of the parser above.
