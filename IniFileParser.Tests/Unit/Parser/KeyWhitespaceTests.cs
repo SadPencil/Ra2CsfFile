@@ -19,6 +19,19 @@ namespace IniFileParser.Tests.Unit.Parser
         }
 
         [Test]
+        public void the_example_uses_the_configured_assignment_character()
+        {
+            var parser = new IniDataParser();
+            parser.Configuration.KeyValueAssigmentChar = ':';
+
+            ParsingException exception = Assert.Throws<ParsingException>(
+                () => parser.Parse("[section]\nkey : value\n"));
+
+            Assert.That(exception.Message, Does.Contain("key:value"));
+            Assert.That(exception.Message, Does.Not.Contain("key=value"));
+        }
+
+        [Test]
         public void the_value_may_start_with_a_space()
         {
             var data = new IniDataParser().Parse("[section]\nkey= value\n");
